@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, ChevronDown, Copy } from "lucide-react";
+import { ChevronRight, ChevronDown, Copy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { JsonNode } from "@/core/domain/entities/json-node";
 import { stringifyChildren } from "@/core/domain/services/json-service";
@@ -71,6 +71,10 @@ function formatValue(node: JsonNode): { display: string; color: string } {
   }
 }
 
+function isUrl(value: unknown): value is string {
+  return typeof value === "string" && (value.startsWith("http://") || value.startsWith("https://"));
+}
+
 export function JsonTreeNode({
   node,
   depth,
@@ -105,6 +109,19 @@ export function JsonTreeNode({
           {highlightText(fmt.display, searchTerm)}
         </span>
         <TypeBadge type={node.type} />
+        {isUrl(node.value) && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-4 opacity-0 group-hover:opacity-100 shrink-0"
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(node.value as string, "_blank", "noopener,noreferrer");
+            }}
+          >
+            <ExternalLink className="size-2.5" />
+          </Button>
+        )}
         <Button
           variant="ghost"
           size="icon"
