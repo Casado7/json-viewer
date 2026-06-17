@@ -1,7 +1,6 @@
 "use client";
 
 import { AlertCircle } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface JsonEditorProps {
   value: string;
@@ -11,8 +10,8 @@ interface JsonEditorProps {
 
 export function JsonEditor({ value, onChange, error }: JsonEditorProps) {
   return (
-    <div className="flex h-full w-full flex-col">
-      <div className="flex items-center justify-between border-b px-3 py-1.5 shrink-0">
+    <div className="flex size-full flex-col">
+      <div className="flex shrink-0 items-center justify-between border-b px-3 py-1.5">
         <span className="text-xs font-medium text-muted-foreground">
           Editor
         </span>
@@ -23,9 +22,9 @@ export function JsonEditor({ value, onChange, error }: JsonEditorProps) {
           </span>
         )}
       </div>
-      <div className="flex-1 w-full min-h-0">
+      <div className="flex min-h-0 flex-1">
         <textarea
-          className="h-full w-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed outline-none"
+          className="size-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed outline-none"
           placeholder="Paste or type your JSON here..."
           value={value}
           onChange={(e) => onChange(e.target.value)}

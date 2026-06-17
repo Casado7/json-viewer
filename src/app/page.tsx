@@ -141,7 +141,7 @@ export default function Home() {
         onExport={handleExport}
         hasJson={hasJson}
       />
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 min-h-0 overflow-hidden">
         <ResizablePanelGroup orientation="horizontal" className="h-full">
           <ResizablePanel defaultSize={40} minSize={25}>
             <JsonEditor
