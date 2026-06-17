@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, forwardRef, useImperativeHandle } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SearchBar } from "@/components/search-bar";
 import { JsonTreeNode } from "@/components/json-tree-node";
@@ -9,26 +9,35 @@ import { searchInTree } from "@/lib/json-utils";
 import { Empty, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { toast } from "sonner";
 
+export interface TreeViewHandle {
+  collapseAll: () => void;
+  expandAll: () => void;
+}
+
 interface JsonTreeViewProps {
   tree: JsonNode | null;
   searchTerm: string;
   onSearch: (term: string) => void;
 }
 
-export function JsonTreeView({ tree, searchTerm, onSearch }: JsonTreeViewProps) {
+export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
+  function JsonTreeView({ tree, searchTerm, onSearch }, ref) {
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
   const [allExpanded, setAllExpanded] = useState(false);
+
   const [searchResults, setSearchResults] = useState<string[]>([]);
   const [currentSearchIdx, setCurrentSearchIdx] = useState(0);
 
-  const collapseAll = useCallback(() => {
+  const collapseAllTree = useCallback(() => {
     setExpandedNodes(new Set());
     setAllExpanded(false);
   }, []);
 
-  const expandAll = useCallback(() => {
+  const expandAllTree = useCallback(() => {
     setAllExpanded(true);
   }, []);
+
+  useImperativeHandle(ref, () => ({ collapseAll: collapseAllTree, expandAll: expandAllTree }), [collapseAllTree, expandAllTree]);
 
   const handleCopy = useCallback(async (value: string) => {
     try {
@@ -117,4 +126,4 @@ export function JsonTreeView({ tree, searchTerm, onSearch }: JsonTreeViewProps) 
       </ScrollArea>
     </div>
   );
-}
+});

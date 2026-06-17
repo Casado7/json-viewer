@@ -9,6 +9,7 @@ import {
 import { Toolbar } from "@/components/toolbar";
 import { JsonEditor } from "@/components/json-editor";
 import { JsonTreeView } from "@/components/json-tree-view";
+import type { TreeViewHandle } from "@/components/json-tree-view";
 import { buildTree, formatJson, minifyJson, parseJson } from "@/lib/json-utils";
 import type { JsonNode } from "@/lib/json-utils";
 import { toast } from "sonner";
@@ -125,6 +126,7 @@ export default function Home() {
     }
   }, [text]);
 
+  const treeRef = useRef<TreeViewHandle>(null);
   const hasJson = !!tree;
 
   return (
@@ -134,8 +136,8 @@ export default function Home() {
         onMinify={handleMinify}
         onCopy={handleCopy}
         onClear={handleClear}
-        onCollapseAll={() => {}}
-        onExpandAll={() => {}}
+        onCollapseAll={() => treeRef.current?.collapseAll()}
+        onExpandAll={() => treeRef.current?.expandAll()}
         onExport={handleExport}
         hasJson={hasJson}
       />
@@ -151,6 +153,7 @@ export default function Home() {
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={60} minSize={30}>
             <JsonTreeView
+              ref={treeRef}
               tree={tree}
               searchTerm={searchTerm}
               onSearch={setSearchTerm}
