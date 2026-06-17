@@ -108,7 +108,7 @@ export function JsonTreeNode({
         <Button
           variant="ghost"
           size="icon"
-          className="ml-auto size-4 opacity-0 group-hover:opacity-100 shrink-0"
+          className="size-4 opacity-0 group-hover:opacity-100 shrink-0"
           onClick={(e) => {
             e.stopPropagation();
             onCopy(node.value as string);
@@ -153,7 +153,7 @@ export function JsonTreeNode({
         <Button
           variant="ghost"
           size="icon"
-          className="ml-auto size-4 opacity-0 group-hover:opacity-100 shrink-0"
+          className="size-4 opacity-0 group-hover:opacity-100 shrink-0"
           onClick={(e) => {
             e.stopPropagation();
             onCopy(stringifyChildren(node));
