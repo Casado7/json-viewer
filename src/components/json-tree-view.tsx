@@ -61,13 +61,13 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
 
   if (!tree) {
     return (
-      <div className="flex flex-1 flex-col">
-        <div className="border-b px-3 py-1.5">
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="flex shrink-0 items-center justify-between border-b px-3 py-1.5">
           <span className="text-xs font-medium text-muted-foreground">
             Viewer
           </span>
         </div>
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex min-h-0 flex-1 items-center justify-center">
           <Empty>
             <EmptyTitle>No JSON data</EmptyTitle>
             <EmptyDescription>
@@ -80,8 +80,8 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
   }
 
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="border-b px-3 py-1.5">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex shrink-0 items-center justify-between border-b px-3 py-1.5">
         <span className="text-xs font-medium text-muted-foreground">
           Viewer
         </span>
