@@ -514,8 +514,8 @@
 
 /* === Scrollbar accent === */
 
-[data-slot="scroll-area-scrollbar"] [data-slot="scroll-area-thumb"] {
-  background: color-mix(in oklch, var(--primary) 50%, transparent) !important;
+[data-slot="scroll-area-thumb"] {
+  background-color: color-mix(in oklch, var(--primary) 40%, transparent) !important;
 }
 
 /* === Accent color themes === */
