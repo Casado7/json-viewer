@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileJson, Copy, Trash2, Shrink, Download, AlertCircle } from "lucide-react";
 
 interface JsonEditorProps {
@@ -59,15 +60,15 @@ export function JsonEditor({
           </span>
         )}
       </div>
-      <div className="flex min-h-0 flex-1">
+      <ScrollArea className="flex min-h-0 flex-1 w-full">
         <textarea
-          className="size-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed outline-none"
+          className="min-h-full w-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed outline-none"
           placeholder="Pega o escribe tu JSON aquí..."
           value={value}
           onChange={(e) => onChange(e.target.value)}
           spellCheck={false}
         />
-      </div>
+      </ScrollArea>
     </div>
   );
 }
