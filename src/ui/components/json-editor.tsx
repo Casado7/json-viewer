@@ -28,7 +28,7 @@ export function JsonEditor({
   disabled,
 }: JsonEditorProps) {
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col">
       <div className="flex shrink-0 items-center gap-2 border-b px-3 py-1.5">
         <span className="text-xs font-medium text-muted-foreground">Editor</span>
         <div data-slot="button-group" className="flex">
