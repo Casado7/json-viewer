@@ -3,6 +3,12 @@
 import { useCallback, useMemo, useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
 import { SearchBar } from "@/ui/components/search-bar";
 import { JsonTreeNode } from "@/ui/components/json-tree-node";
 import type { JsonNode } from "@/core/domain/entities/json-node";
@@ -66,26 +72,30 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
 
   if (!tree) {
     return (
-      <div className="flex min-h-0 flex-1 flex-col">
-        <div className="flex shrink-0 items-center justify-between border-b px-3 py-1.5">
-          <span className="text-xs font-medium text-muted-foreground">Visor</span>
-        </div>
-        <div className="flex min-h-0 flex-1 items-center justify-center">
+      <Card className="flex flex-1 flex-col gap-0 rounded-none border-0">
+        <CardHeader className="flex shrink-0 flex-row items-center border-b px-3 py-2">
+          <CardTitle className="text-xs font-medium text-muted-foreground m-0">
+            Visor
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex min-h-0 flex-1 items-center justify-center p-0">
           <Empty>
             <EmptyTitle>Sin datos JSON</EmptyTitle>
             <EmptyDescription>
               Pega o escribe JSON en el editor para previsualizarlo aquí.
             </EmptyDescription>
           </Empty>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex shrink-0 items-center gap-2 border-b px-3 py-1.5">
-        <span className="text-xs font-medium text-muted-foreground">Visor</span>
+    <Card className="flex flex-1 flex-col gap-0 rounded-none border-0">
+      <CardHeader className="flex shrink-0 flex-row items-center gap-2 border-b px-3 py-2">
+        <CardTitle className="text-xs font-medium text-muted-foreground m-0">
+          Visor
+        </CardTitle>
         <div data-slot="button-group" className="flex">
           <Button variant="outline" size="xs" onClick={collapseAllTree} aria-disabled={disabled || undefined} data-disabled={disabled || undefined} className={"border-primary/40" + (disabled ? " pointer-events-none opacity-50" : "")}>
             <Minimize2 data-icon="inline-start" />
@@ -96,36 +106,38 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
             Expandir
           </Button>
         </div>
-      </div>
-      <SearchBar
-        onSearch={onSearch}
-        resultCount={searchResultsList.length}
-        currentIndex={currentSearchIdx}
-        onNext={() =>
-          setCurrentSearchIdx((p) => (p + 1) % Math.max(searchResultsList.length, 1))
-        }
-        onPrev={() =>
-          setCurrentSearchIdx(
-            (p) =>
-              (p - 1 + Math.max(searchResultsList.length, 1)) %
-              Math.max(searchResultsList.length, 1)
-          )
-        }
-      />
-      <ScrollArea className="flex-1">
-        <div className="py-2">
-          <JsonTreeNode
-            node={tree}
-            depth={0}
-            path={tree.key ?? "(root)"}
-            searchTerm={searchTerm}
-            expandedPaths={expandedPaths}
-            allExpanded={allExpanded}
-            onToggle={toggleNode}
-            onCopy={(value: string) => useCase.copyValue(value)}
-          />
-        </div>
-      </ScrollArea>
-    </div>
+      </CardHeader>
+      <CardContent className="flex min-h-0 flex-1 flex-col p-0">
+        <SearchBar
+          onSearch={onSearch}
+          resultCount={searchResultsList.length}
+          currentIndex={currentSearchIdx}
+          onNext={() =>
+            setCurrentSearchIdx((p) => (p + 1) % Math.max(searchResultsList.length, 1))
+          }
+          onPrev={() =>
+            setCurrentSearchIdx(
+              (p) =>
+                (p - 1 + Math.max(searchResultsList.length, 1)) %
+                Math.max(searchResultsList.length, 1)
+            )
+          }
+        />
+        <ScrollArea className="flex-1">
+          <div className="py-2">
+            <JsonTreeNode
+              node={tree}
+              depth={0}
+              path={tree.key ?? "(root)"}
+              searchTerm={searchTerm}
+              expandedPaths={expandedPaths}
+              allExpanded={allExpanded}
+              onToggle={toggleNode}
+              onCopy={(value: string) => useCase.copyValue(value)}
+            />
+          </div>
+        </ScrollArea>
+      </CardContent>
+    </Card>
   );
 });

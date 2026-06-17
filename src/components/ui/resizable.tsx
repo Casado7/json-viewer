@@ -24,7 +24,7 @@ function ResizablePanel({ className, ...props }: ResizablePrimitive.PanelProps) 
   return (
     <ResizablePrimitive.Panel
       data-slot="resizable-panel"
-      className={cn("flex size-full overflow-hidden", className)}
+      className={cn("flex size-full overflow-hidden flex-col", className)}
       {...props}
     />
   )

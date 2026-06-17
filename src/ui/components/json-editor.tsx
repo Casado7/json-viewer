@@ -2,6 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
 import { FileJson, Copy, Trash2, Shrink, Download, AlertCircle } from "lucide-react";
 
 interface JsonEditorProps {
@@ -28,9 +34,11 @@ export function JsonEditor({
   disabled,
 }: JsonEditorProps) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex shrink-0 items-center gap-2 border-b px-3 py-1.5">
-        <span className="text-xs font-medium text-muted-foreground">Editor</span>
+    <Card className="flex flex-1 flex-col gap-0 rounded-none border-0 border-r">
+      <CardHeader className="flex shrink-0 flex-row items-center gap-2 border-b px-3 py-2">
+        <CardTitle className="text-xs font-medium text-muted-foreground m-0">
+          Editor
+        </CardTitle>
         <div data-slot="button-group" className="flex">
           <Button variant="default" size="xs" onClick={onFormat}>
             <FileJson data-icon="inline-start" />
@@ -59,16 +67,18 @@ export function JsonEditor({
             {error}
           </span>
         )}
-      </div>
-      <ScrollArea className="flex min-h-0 flex-1 w-full">
-        <textarea
-          className="min-h-full w-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed outline-none"
-          placeholder="Pega o escribe tu JSON aquí..."
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          spellCheck={false}
-        />
-      </ScrollArea>
-    </div>
+      </CardHeader>
+      <CardContent className="flex min-h-0 flex-1 p-0">
+        <ScrollArea className="flex-1 w-full overflow-hidden">
+          <textarea
+            className="min-h-full w-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed outline-none"
+            placeholder="Pega o escribe tu JSON aquí..."
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            spellCheck={false}
+          />
+        </ScrollArea>
+      </CardContent>
+    </Card>
   );
 }
