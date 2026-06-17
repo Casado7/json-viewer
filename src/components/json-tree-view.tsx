@@ -22,14 +22,13 @@ interface JsonTreeViewProps {
 
 export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
   function JsonTreeView({ tree, searchTerm, onSearch }, ref) {
-  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
+  const [expandedPaths, setExpandedPaths] = useState<Set<string>>(new Set());
   const [allExpanded, setAllExpanded] = useState(false);
-
   const [searchResults, setSearchResults] = useState<string[]>([]);
   const [currentSearchIdx, setCurrentSearchIdx] = useState(0);
 
   const collapseAllTree = useCallback(() => {
-    setExpandedNodes(new Set());
+    setExpandedPaths(new Set());
     setAllExpanded(false);
   }, []);
 
@@ -39,32 +38,25 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
 
   useImperativeHandle(ref, () => ({ collapseAll: collapseAllTree, expandAll: expandAllTree }), [collapseAllTree, expandAllTree]);
 
-  const handleCopy = useCallback(async (value: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      toast.success("Copied to clipboard");
-    } catch {
-      toast.error("Failed to copy");
-    }
+  const toggleNode = useCallback((path: string) => {
+    setExpandedPaths((prev) => {
+      const next = new Set(prev);
+      if (next.has(path)) next.delete(path);
+      else next.add(path);
+      return next;
+    });
   }, []);
 
-  const toggleNode = useCallback(
-    (path: string) => {
-      setExpandedNodes((prev) => {
-        const next = new Set(prev);
-        if (next.has(path)) next.delete(path);
-        else next.add(path);
-        return next;
-      });
-    },
-    []
-  );
+  const displayExpanded = useMemo(() => {
+    if (allExpanded) {
+      return new Set<string>(["_all_"]);
+    }
+    return expandedPaths;
+  }, [allExpanded, expandedPaths]);
 
   const searchResultsList = useMemo(() => {
     if (!tree || !searchTerm) return [];
-    const results = searchInTree(tree, searchTerm);
-    setSearchResults(results.map((r) => r.path));
-    return results;
+    return searchInTree(tree, searchTerm);
   }, [tree, searchTerm]);
 
   if (!tree) {
@@ -114,13 +106,18 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
           <JsonTreeNode
             node={tree}
             depth={0}
+            path={tree.key ?? "(root)"}
             searchTerm={searchTerm}
-            defaultExpanded={allExpanded}
-            expanded={
-              allExpanded || expandedNodes.has(tree.key ?? "(root)")
-            }
-            onToggle={() => toggleNode(tree.key ?? "(root)")}
-            onCopy={handleCopy}
+            expandedPaths={displayExpanded}
+            onToggle={toggleNode}
+            onCopy={async (value: string) => {
+              try {
+                await navigator.clipboard.writeText(value);
+                toast.success("Copied to clipboard");
+              } catch {
+                toast.error("Failed to copy");
+              }
+            }}
           />
         </div>
       </ScrollArea>

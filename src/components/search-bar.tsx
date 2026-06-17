@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, X } from "lucide-react";
+import { Search, X, ChevronUp, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCallback, useEffect, useState } from "react";
@@ -67,10 +67,10 @@ export function SearchBar({
       {resultCount > 1 && (
         <>
           <Button variant="ghost" size="icon" className="size-6" onClick={onPrev}>
-            <span className="text-xs">▲</span>
+            <ChevronUp className="size-3" />
           </Button>
           <Button variant="ghost" size="icon" className="size-6" onClick={onNext}>
-            <span className="text-xs">▼</span>
+            <ChevronDown className="size-3" />
           </Button>
         </>
       )}

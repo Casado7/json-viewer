@@ -7,18 +7,18 @@ import type { JsonNode } from "@/lib/json-utils";
 interface JsonTreeNodeProps {
   node: JsonNode;
   depth: number;
+  path: string;
   searchTerm: string;
-  defaultExpanded: boolean;
-  expanded: boolean;
-  onToggle: () => void;
+  expandedPaths: Set<string>;
+  onToggle: (path: string) => void;
   onCopy: (value: string) => void;
 }
 
 function highlightText(text: string, term: string) {
   if (!term) return text;
   const lower = text.toLowerCase();
-  const lowerTerm = term.toLowerCase();
-  const idx = lower.indexOf(lowerTerm);
+  const termLower = term.toLowerCase();
+  const idx = lower.indexOf(termLower);
   if (idx === -1) return text;
   return (
     <>
@@ -46,26 +46,32 @@ function formatValue(node: JsonNode): { display: string; color: string } {
   }
 }
 
+function hasSearchMatch(node: JsonNode, term: string): boolean {
+  if (!term) return false;
+  const lower = term.toLowerCase();
+  if (node.key?.toLowerCase().includes(lower)) return true;
+  if (typeof node.value === "string" && node.value.toLowerCase().includes(lower)) return true;
+  if (typeof node.value === "number" || typeof node.value === "boolean") {
+    if (String(node.value).toLowerCase().includes(lower)) return true;
+  }
+  return false;
+}
+
 export function JsonTreeNode({
   node,
   depth,
+  path,
   searchTerm,
-  defaultExpanded,
-  expanded,
+  expandedPaths,
   onToggle,
   onCopy,
 }: JsonTreeNodeProps) {
   const isLeaf = node.children === null;
   const isExpandable = !isLeaf && node.size > 0;
   const indent = depth * 16;
-
-  const hasSearchMatch = searchTerm
-    ? node.key?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      defaultExpanded
-    : false;
-
-  const showExpanded =
-    isExpandable && (expanded || (searchTerm && hasSearchMatch));
+  const isExpanded = expandedPaths.has(path);
+  const matchSelf = hasSearchMatch(node, searchTerm);
+  const shouldExpand = isExpanded || (!!searchTerm && matchSelf);
 
   if (isLeaf) {
     const fmt = formatValue(node);
@@ -87,7 +93,10 @@ export function JsonTreeNode({
           variant="ghost"
           size="icon"
           className="ml-auto size-4 opacity-0 group-hover:opacity-100 shrink-0"
-          onClick={() => onCopy(node.value as string)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onCopy(node.value as string);
+          }}
         >
           <Copy className="size-2.5" />
         </Button>
@@ -105,10 +114,10 @@ export function JsonTreeNode({
       <div
         className="group flex cursor-pointer items-center gap-1 rounded px-1 py-0.5 hover:bg-muted/50"
         style={{ paddingLeft: `${8 + indent}px` }}
-        onClick={onToggle}
+        onClick={() => onToggle(path)}
       >
         {isExpandable ? (
-          showExpanded ? (
+          shouldExpand ? (
             <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
           ) : (
             <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
@@ -137,24 +146,23 @@ export function JsonTreeNode({
           <Copy className="size-2.5" />
         </Button>
       </div>
-      {showExpanded && node.children && (
+      {shouldExpand && node.children && (
         <div>
-          {node.children.map((child, index) => (
-            <JsonTreeNode
-              key={`${child.key}-${index}`}
-              node={child}
-              depth={depth + 1}
-              searchTerm={searchTerm}
-              defaultExpanded={
-                !!searchTerm &&
-                (child.key?.toLowerCase().includes(searchTerm.toLowerCase()) ??
-                  false)
-              }
-              expanded={false}
-              onToggle={() => {}}
-              onCopy={onCopy}
-            />
-          ))}
+          {node.children.map((child, index) => {
+            const childPath = path ? `${path}.${child.key ?? index}` : String(child.key ?? index);
+            return (
+              <JsonTreeNode
+                key={childPath}
+                node={child}
+                depth={depth + 1}
+                path={childPath}
+                searchTerm={searchTerm}
+                expandedPaths={expandedPaths}
+                onToggle={onToggle}
+                onCopy={onCopy}
+              />
+            );
+          })}
         </div>
       )}
     </div>

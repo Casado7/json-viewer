@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,7 +12,7 @@ import {
 import { useEffect, useState } from "react";
 
 export function ModeToggle() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
@@ -45,7 +45,7 @@ export function ModeToggle() {
           Dark
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          <span data-icon="inline-start" className="text-xs">💻</span>
+          <Monitor data-icon="inline-start" />
           System
         </DropdownMenuItem>
       </DropdownMenuContent>
