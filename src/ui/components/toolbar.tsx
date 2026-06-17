@@ -62,15 +62,15 @@ export function Toolbar({
       <Separator orientation="vertical" className="mx-2 h-5" />
 
       <div data-slot="button-group" className="flex">
-        <Button variant="ghost" size="sm" onClick={onCopy} disabled={disabled}>
+        <Button variant="ghost" size="sm" onClick={onCopy} aria-disabled={disabled || undefined} data-disabled={disabled || undefined} className={disabled ? "pointer-events-none opacity-50" : ""}>
           <Copy data-icon="inline-start" />
           Copiar
         </Button>
-        <Button variant="ghost" size="sm" onClick={onExport} disabled={disabled}>
+        <Button variant="ghost" size="sm" onClick={onExport} aria-disabled={disabled || undefined} data-disabled={disabled || undefined} className={disabled ? "pointer-events-none opacity-50" : ""}>
           <Download data-icon="inline-start" />
           Exportar
         </Button>
-        <Button variant="ghost" size="sm" onClick={onClear} disabled={disabled}>
+        <Button variant="ghost" size="sm" onClick={onClear} aria-disabled={disabled || undefined} data-disabled={disabled || undefined} className={disabled ? "pointer-events-none opacity-50" : ""}>
           <Trash2 data-icon="inline-start" />
           Limpiar
         </Button>
@@ -79,11 +79,11 @@ export function Toolbar({
       <Separator orientation="vertical" className="mx-2 h-5" />
 
       <div data-slot="button-group" className="flex">
-        <Button variant="ghost" size="sm" onClick={onCollapseAll} disabled={disabled}>
+        <Button variant="ghost" size="sm" onClick={onCollapseAll} aria-disabled={disabled || undefined} data-disabled={disabled || undefined} className={disabled ? "pointer-events-none opacity-50" : ""}>
           <Minimize2 data-icon="inline-start" />
           Colapsar
         </Button>
-        <Button variant="ghost" size="sm" onClick={onExpandAll} disabled={disabled}>
+        <Button variant="ghost" size="sm" onClick={onExpandAll} aria-disabled={disabled || undefined} data-disabled={disabled || undefined} className={disabled ? "pointer-events-none opacity-50" : ""}>
           <Maximize2 data-icon="inline-start" />
           Expandir
         </Button>
