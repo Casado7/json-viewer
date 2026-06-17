@@ -1,9 +1,7 @@
 "use client";
 
-import { ModeToggle } from "@/ui/components/mode-toggle";
-import { AccentSelector } from "@/ui/components/accent-selector";
-import { BaseThemeSelector } from "@/ui/components/base-theme-selector";
 import { FileJson } from "lucide-react";
+import { ThemeMenu } from "@/ui/components/theme-menu";
 
 export function Toolbar() {
   return (
@@ -13,9 +11,7 @@ export function Toolbar() {
         <span className="text-sm font-semibold">Visor JSON</span>
       </div>
       <div className="ml-auto flex items-center gap-2">
-        <BaseThemeSelector />
-        <AccentSelector />
-        <ModeToggle />
+        <ThemeMenu />
       </div>
     </div>
   );
