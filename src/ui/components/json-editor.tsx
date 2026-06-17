@@ -70,7 +70,7 @@ export function JsonEditor({
       </CardHeader>
       <CardContent className="flex min-h-0 flex-1 p-0">
         <Textarea
-          className="h-full w-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed"
+          className="h-full w-full resize-none border-0 bg-transparent dark:bg-transparent p-3 font-mono text-sm leading-relaxed"
           placeholder="Pega o escribe tu JSON aquí..."
           value={value}
           onChange={(e) => onChange(e.target.value)}
