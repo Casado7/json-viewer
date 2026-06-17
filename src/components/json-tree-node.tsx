@@ -34,13 +34,13 @@ function highlightText(text: string, term: string) {
 function formatValue(node: JsonNode): { display: string; color: string } {
   switch (node.type) {
     case "string":
-      return { display: `"${node.value as string}"`, color: "text-green-600 dark:text-green-400" };
+      return { display: `"${node.value as string}"`, color: "text-json-string" };
     case "number":
-      return { display: String(node.value), color: "text-blue-600 dark:text-blue-400" };
+      return { display: String(node.value), color: "text-json-number" };
     case "boolean":
-      return { display: String(node.value), color: "text-orange-600 dark:text-orange-400" };
+      return { display: String(node.value), color: "text-json-boolean" };
     case "null":
-      return { display: "null", color: "text-red-500 dark:text-red-400" };
+      return { display: "null", color: "text-json-null" };
     default:
       return { display: "", color: "" };
   }

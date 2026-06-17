@@ -46,6 +46,10 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-json-string: var(--json-string);
+  --color-json-number: var(--json-number);
+  --color-json-boolean: var(--json-boolean);
+  --color-json-null: var(--json-null);
 }
 
 :root {
@@ -81,6 +85,10 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --json-string: oklch(0.5 0.2 145);
+  --json-number: oklch(0.45 0.2 260);
+  --json-boolean: oklch(0.6 0.24 60);
+  --json-null: oklch(0.6 0.24 30);
 }
 
 .dark {
@@ -115,6 +123,10 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --json-string: oklch(0.6 0.2 145);
+  --json-number: oklch(0.55 0.2 260);
+  --json-boolean: oklch(0.7 0.22 60);
+  --json-null: oklch(0.7 0.2 30);
 }
 
 @layer base {

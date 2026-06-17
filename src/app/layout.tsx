@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "sonner";
+import { ThemedToaster } from "@/components/themed-toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="es"
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
@@ -35,7 +35,7 @@ export default function RootLayout({
         <ThemeProvider>
           <TooltipProvider>
             {children}
-            <Toaster position="bottom-right" richColors />
+            <ThemedToaster />
           </TooltipProvider>
         </ThemeProvider>
       </body>
