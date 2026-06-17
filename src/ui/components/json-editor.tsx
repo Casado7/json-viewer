@@ -12,9 +12,7 @@ export function JsonEditor({ value, onChange, error }: JsonEditorProps) {
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex shrink-0 items-center justify-between border-b px-3 py-1.5">
-        <span className="text-xs font-medium text-muted-foreground">
-          Editor
-        </span>
+        <span className="text-xs font-medium text-muted-foreground">Editor</span>
         {error && (
           <span className="flex items-center gap-1 text-xs text-destructive">
             <AlertCircle className="size-3" />

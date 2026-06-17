@@ -9,8 +9,8 @@ import {
   type ReactNode,
 } from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import type { AccentColor } from "@/lib/theme-config";
-import { ACCENT_STORAGE_KEY } from "@/lib/theme-config";
+import type { AccentColor } from "@/config/theme-config";
+import { createLocalStorageThemeAdapter } from "@/infrastructure/adapters/localStorage-theme.adapter";
 
 interface ThemeContextValue {
   accent: AccentColor;
@@ -34,19 +34,21 @@ export function ThemeProvider({
 }) {
   const [accent, setAccentState] = useState<AccentColor>(defaultAccent);
   const [mounted, setMounted] = useState(false);
+  const storage = createLocalStorageThemeAdapter();
 
   useEffect(() => {
-    const stored = localStorage.getItem(ACCENT_STORAGE_KEY) as AccentColor | null;
-    if (stored && isAccentColor(stored)) {
-      setAccentState(stored);
-    }
+    const stored = storage.getAccent();
+    if (stored) setAccentState(stored);
     setMounted(true);
-  }, []);
+  }, [storage]);
 
-  const setAccent = useCallback((color: AccentColor) => {
-    setAccentState(color);
-    localStorage.setItem(ACCENT_STORAGE_KEY, color);
-  }, []);
+  const setAccent = useCallback(
+    (color: AccentColor) => {
+      setAccentState(color);
+      storage.setAccent(color);
+    },
+    [storage]
+  );
 
   useEffect(() => {
     if (!mounted) return;
@@ -70,11 +72,4 @@ export function ThemeProvider({
       </NextThemesProvider>
     </ThemeContext>
   );
-}
-
-function isAccentColor(value: string): value is AccentColor {
-  return [
-    "neutral", "gray", "slate", "zinc", "stone",
-    "red", "rose", "orange", "green", "blue", "yellow", "violet",
-  ].includes(value);
 }

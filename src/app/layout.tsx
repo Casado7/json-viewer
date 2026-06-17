@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/ui/providers/theme-provider";
+import { UseCaseProvider } from "@/ui/providers/use-case-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemedToaster } from "@/components/themed-toaster";
+import { ThemedToaster } from "@/ui/components/themed-toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,10 +34,12 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <TooltipProvider>
-            {children}
-            <ThemedToaster />
-          </TooltipProvider>
+          <UseCaseProvider>
+            <TooltipProvider>
+              {children}
+              <ThemedToaster />
+            </TooltipProvider>
+          </UseCaseProvider>
         </ThemeProvider>
       </body>
     </html>

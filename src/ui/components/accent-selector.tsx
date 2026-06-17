@@ -1,7 +1,7 @@
 "use client";
 
-import { useAccent } from "@/components/theme-provider";
-import { accentColors, accentColorLabels, type AccentColor } from "@/lib/theme-config";
+import { useAccent } from "@/ui/providers/theme-provider";
+import { accentColors, accentColorLabels, type AccentColor } from "@/config/theme-config";
 import {
   Select,
   SelectContent,

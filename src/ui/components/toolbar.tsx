@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ModeToggle } from "@/components/mode-toggle";
-import { AccentSelector } from "@/components/accent-selector";
+import { ModeToggle } from "@/ui/components/mode-toggle";
+import { AccentSelector } from "@/ui/components/accent-selector";
 import {
   FileJson,
   Copy,
@@ -35,9 +34,7 @@ export function Toolbar({
   onExport,
   hasJson,
 }: ToolbarProps) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  const disabled = mounted ? !hasJson : true;
+  const disabled = !hasJson;
   return (
     <div className="flex items-center gap-1.5 border-b px-3 py-2">
       <div className="flex items-center gap-1.5">
@@ -57,51 +54,26 @@ export function Toolbar({
 
       <Separator orientation="vertical" className="mx-2 h-5" />
 
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onCopy}
-        disabled={disabled}
-      >
+      <Button variant="ghost" size="sm" onClick={onCopy} disabled={disabled}>
         <Copy data-icon="inline-start" />
         Copiar
       </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onExport}
-        disabled={disabled}
-      >
+      <Button variant="ghost" size="sm" onClick={onExport} disabled={disabled}>
         <Download data-icon="inline-start" />
         Exportar
       </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onClear}
-        disabled={disabled}
-      >
+      <Button variant="ghost" size="sm" onClick={onClear} disabled={disabled}>
         <Trash2 data-icon="inline-start" />
         Limpiar
       </Button>
 
       <Separator orientation="vertical" className="mx-2 h-5" />
 
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onCollapseAll}
-        disabled={disabled}
-      >
+      <Button variant="ghost" size="sm" onClick={onCollapseAll} disabled={disabled}>
         <Maximize2 data-icon="inline-start" />
         Colapsar
       </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onExpandAll}
-        disabled={disabled}
-      >
+      <Button variant="ghost" size="sm" onClick={onExpandAll} disabled={disabled}>
         Expandir
       </Button>
 

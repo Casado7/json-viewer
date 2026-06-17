@@ -1,12 +1,4 @@
-export type JsonNodeType = "object" | "array" | "string" | "number" | "boolean" | "null";
-
-export interface JsonNode {
-  key: string | null;
-  value: unknown;
-  type: JsonNodeType;
-  children: JsonNode[] | null;
-  size: number;
-}
+import type { JsonNode, JsonNodeType } from "@/core/domain/entities/json-node";
 
 function getType(value: unknown): JsonNodeType {
   if (value === null) return "null";
@@ -81,70 +73,27 @@ export function getValuePreview(value: unknown, maxLen = 50): string {
   return "";
 }
 
-export interface SearchMatch {
-  path: string;
-  key: string;
-  value: string;
+export function stringifyChildren(node: JsonNode): string {
+  if (node.type === "object") {
+    const entries = (node.children ?? []).map(
+      (c) => `  ${JSON.stringify(c.key)}: ${stringifyValue(c)}`
+    );
+    return `{\n${entries.join(",\n")}\n}`;
+  }
+  const items = (node.children ?? []).map((c) => `  ${stringifyValue(c)}`);
+  return `[\n${items.join(",\n")}\n]`;
 }
 
-export function searchInTree(
-  node: JsonNode,
-  term: string,
-  path: string = "",
-  results: SearchMatch[] = []
-): SearchMatch[] {
-  if (!term) return results;
-
-  const lowerTerm = term.toLowerCase();
-  const currentPath = node.key !== null ? (path ? `${path}.${node.key}` : node.key) : path;
-
-  const keyMatch = node.key?.toLowerCase().includes(lowerTerm);
-  const valueMatch =
-    typeof node.value === "string" && node.value.toLowerCase().includes(lowerTerm);
-  const rawValueMatch =
-    typeof node.value === "number" || typeof node.value === "boolean"
-      ? String(node.value).toLowerCase().includes(lowerTerm)
-      : false;
-
-  if (keyMatch || valueMatch || rawValueMatch) {
-    results.push({
-      path: currentPath,
-      key: node.key ?? "(root)",
-      value: getValuePreview(node.value),
-    });
-  }
-
-  if (node.children) {
-    for (const child of node.children) {
-      searchInTree(child, term, currentPath, results);
-    }
-  }
-
-  return results;
-}
-
-export function stringifyNode(node: JsonNode): string {
+function stringifyValue(node: JsonNode): string {
   switch (node.type) {
-    case "null":
-      return "null";
-    case "boolean":
-    case "number":
-      return String(node.value);
     case "string":
       return JSON.stringify(node.value);
+    case "number":
+    case "boolean":
+    case "null":
+      return String(node.value);
     case "object":
-      if (node.children && node.children.length > 0) {
-        const entries = node.children.map(
-          (child) => `${JSON.stringify(child.key)}: ${stringifyNode(child)}`
-        );
-        return `{ ${entries.join(", ")} }`;
-      }
-      return "{}";
     case "array":
-      if (node.children && node.children.length > 0) {
-        const items = node.children.map((child) => stringifyNode(child));
-        return `[ ${items.join(", ")} ]`;
-      }
-      return "[]";
+      return stringifyChildren(node);
   }
 }

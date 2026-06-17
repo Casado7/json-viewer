@@ -2,12 +2,11 @@
 
 import { useCallback, useMemo, useState, forwardRef, useImperativeHandle } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { SearchBar } from "@/components/search-bar";
-import { JsonTreeNode } from "@/components/json-tree-node";
-import type { JsonNode } from "@/lib/json-utils";
-import { searchInTree } from "@/lib/json-utils";
+import { SearchBar } from "@/ui/components/search-bar";
+import { JsonTreeNode } from "@/ui/components/json-tree-node";
+import type { JsonNode } from "@/core/domain/entities/json-node";
+import { searchInTree } from "@/core/domain/services/search-service";
 import { Empty, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
-import { toast } from "sonner";
 
 export interface TreeViewHandle {
   collapseAll: () => void;
@@ -48,9 +47,7 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
   }, []);
 
   const displayExpanded = useMemo(() => {
-    if (allExpanded) {
-      return new Set<string>(["_all_"]);
-    }
+    if (allExpanded) return new Set<string>(["_all_"]);
     return expandedPaths;
   }, [allExpanded, expandedPaths]);
 
@@ -63,9 +60,7 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
     return (
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="flex shrink-0 items-center justify-between border-b px-3 py-1.5">
-          <span className="text-xs font-medium text-muted-foreground">
-            Viewer
-          </span>
+          <span className="text-xs font-medium text-muted-foreground">Visor</span>
         </div>
         <div className="flex min-h-0 flex-1 items-center justify-center">
           <Empty>
@@ -82,9 +77,7 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="flex shrink-0 items-center justify-between border-b px-3 py-1.5">
-        <span className="text-xs font-medium text-muted-foreground">
-          Viewer
-        </span>
+        <span className="text-xs font-medium text-muted-foreground">Visor</span>
       </div>
       <SearchBar
         onSearch={onSearch}
@@ -113,10 +106,7 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
             onCopy={async (value: string) => {
               try {
                 await navigator.clipboard.writeText(value);
-                toast.success("Copiado al portapapeles");
-              } catch {
-                toast.error("Error al copiar");
-              }
+              } catch {}
             }}
           />
         </div>

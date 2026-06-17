@@ -1,139 +1,85 @@
 "use client";
 
-import { useCallback, useState, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { JsonNode } from "@/core/domain/entities/json-node";
 import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
 } from "@/components/ui/resizable";
-import { Toolbar } from "@/components/toolbar";
-import { JsonEditor } from "@/components/json-editor";
-import { JsonTreeView } from "@/components/json-tree-view";
-import type { TreeViewHandle } from "@/components/json-tree-view";
-import { buildTree, formatJson, minifyJson, parseJson } from "@/lib/json-utils";
-import type { JsonNode } from "@/lib/json-utils";
-import { toast } from "sonner";
-
-const HISTORY_KEY = "json-viewer-history";
+import { Toolbar } from "@/ui/components/toolbar";
+import { JsonEditor } from "@/ui/components/json-editor";
+import { JsonTreeView } from "@/ui/components/json-tree-view";
+import { StatusBar } from "@/ui/components/status-bar";
+import type { TreeViewHandle } from "@/ui/components/json-tree-view";
+import { useUseCase } from "@/ui/providers/use-case-provider";
 
 export default function Home() {
-  const [text, setText] = useState("");
-  const [tree, setTree] = useState<JsonNode | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const useCase = useUseCase();
+  const textRef = useRef("");
+  const treeRef = useRef<TreeViewHandle>(null);
+  const [state, setState] = useState({
+    text: "",
+    tree: null as JsonNode | null,
+    error: null as string | null,
+    searchTerm: "",
+  });
 
   useEffect(() => {
-    const saved = localStorage.getItem(HISTORY_KEY);
-    if (saved) {
-      try {
-        const items = JSON.parse(saved) as string[];
-        if (items.length > 0) {
-          setText(items[0]);
-        }
-      } catch {}
+    const initial = useCase.loadInitialState();
+    if (initial.text !== undefined) {
+      textRef.current = initial.text;
+      setState((prev) => ({ ...prev, ...initial }));
     }
-  }, []);
-
-  const parseAndBuild = useCallback((value: string) => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-
-    debounceRef.current = setTimeout(() => {
-      const trimmed = value.trim();
-      if (!trimmed) {
-        setTree(null);
-        setError(null);
-        return;
-      }
-
-      try {
-        const parsed = parseJson(trimmed);
-        setTree(buildTree(parsed));
-        setError(null);
-
-        const history: string[] = JSON.parse(
-          localStorage.getItem(HISTORY_KEY) ?? "[]"
-        );
-        const updated = [trimmed, ...history.filter((h) => h !== trimmed)].slice(
-          0,
-          10
-        );
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
-      } catch (err) {
-        setError((err as Error).message);
-        setTree(null);
-      }
-    }, 400);
-  }, []);
+  }, [useCase]);
 
   const handleChange = useCallback(
     (value: string) => {
-      setText(value);
-      parseAndBuild(value);
+      textRef.current = value;
+      setState((prev) => ({ ...prev, text: value }));
+      useCase.processInput(value, (partial) => {
+        setState((prev) => ({ ...prev, ...partial }));
+      });
     },
-    [parseAndBuild]
+    [useCase]
   );
 
   const handleFormat = useCallback(() => {
-    try {
-      const formatted = formatJson(text);
-      setText(formatted);
-      parseAndBuild(formatted);
-      toast.success("JSON formateado");
-    } catch {
-      toast.error("JSON inválido");
+    const formatted = useCase.format(textRef.current);
+    if (formatted !== null) {
+      textRef.current = formatted;
+      setState((prev) => ({ ...prev, text: formatted }));
+      useCase.processInput(formatted, (partial) => {
+        setState((prev) => ({ ...prev, ...partial }));
+      });
     }
-  }, [text, parseAndBuild]);
+  }, [useCase]);
 
   const handleMinify = useCallback(() => {
-    try {
-      const minified = minifyJson(text);
-      setText(minified);
-      parseAndBuild(minified);
-      toast.success("JSON minificado");
-    } catch {
-      toast.error("JSON inválido");
+    const minified = useCase.minify(textRef.current);
+    if (minified !== null) {
+      textRef.current = minified;
+      setState((prev) => ({ ...prev, text: minified }));
+      useCase.processInput(minified, (partial) => {
+        setState((prev) => ({ ...prev, ...partial }));
+      });
     }
-  }, [text, parseAndBuild]);
+  }, [useCase]);
 
   const handleCopy = useCallback(() => {
-    if (!text.trim()) return;
-    navigator.clipboard.writeText(text);
-    toast.success("Copiado al portapapeles");
-  }, [text]);
-
-  const handleClear = useCallback(() => {
-    setText("");
-    setTree(null);
-    setError(null);
-    setSearchTerm("");
-  }, []);
+    useCase.copy(textRef.current);
+  }, [useCase]);
 
   const handleExport = useCallback(() => {
-    if (!text.trim()) return;
-    try {
-      const formatted = formatJson(text);
-      const blob = new Blob([formatted], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "data.json";
-      a.click();
-      URL.revokeObjectURL(url);
-      toast.success("Archivo descargado");
-    } catch {
-      toast.error("JSON inválido");
-    }
-  }, [text]);
+    useCase.export(textRef.current);
+  }, [useCase]);
 
-  const treeRef = useRef<TreeViewHandle>(null);
-  const hasJson = !!tree;
+  const handleClear = useCallback(() => {
+    textRef.current = "";
+    setState({ text: "", tree: null, error: null, searchTerm: "" });
+  }, []);
 
-  const lineCount = text ? text.split("\n").length : 0;
-  const charCount = text.length;
-  const jsonSize = hasJson
-    ? `${(new Blob([text]).size / 1024).toFixed(1)} KB`
-    : "-";
+  const hasJson = !!state.tree;
 
   return (
     <div className="flex h-screen flex-col">
@@ -151,36 +97,23 @@ export default function Home() {
         <ResizablePanelGroup orientation="horizontal" className="h-full">
           <ResizablePanel defaultSize={40} minSize={25}>
             <JsonEditor
-              value={text}
+              value={state.text}
               onChange={handleChange}
-              error={error}
+              error={state.error}
             />
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={60} minSize={30}>
             <JsonTreeView
               ref={treeRef}
-              tree={tree}
-              searchTerm={searchTerm}
-              onSearch={setSearchTerm}
+              tree={state.tree}
+              searchTerm={state.searchTerm}
+              onSearch={(term) => setState((prev) => ({ ...prev, searchTerm: term }))}
             />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
-      <div className="flex shrink-0 items-center gap-4 border-t px-4 py-1 text-xs text-muted-foreground">
-        <span>Líneas: {lineCount}</span>
-        <span>Caracteres: {charCount}</span>
-        <span>Tamaño: {jsonSize}</span>
-        <span className="ml-auto">
-          {error ? (
-            <span className="text-destructive">Error: JSON inválido</span>
-          ) : hasJson ? (
-            <span className="text-json-string">JSON válido</span>
-          ) : (
-            "Sin datos"
-          )}
-        </span>
-      </div>
+      <StatusBar text={state.text} error={state.error} hasJson={hasJson} />
     </div>
   );
 }
