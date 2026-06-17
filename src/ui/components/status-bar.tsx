@@ -4,9 +4,10 @@ interface StatusBarProps {
   text: string;
   error: string | null;
   hasJson: boolean;
+  isParsing: boolean;
 }
 
-export function StatusBar({ text, error, hasJson }: StatusBarProps) {
+export function StatusBar({ text, error, hasJson, isParsing }: StatusBarProps) {
   const lineCount = text ? text.split("\n").length : 0;
   const charCount = text.length;
   const jsonSize = hasJson
@@ -19,7 +20,9 @@ export function StatusBar({ text, error, hasJson }: StatusBarProps) {
       <span>Caracteres: {charCount}</span>
       <span>Tamaño: {jsonSize}</span>
       <span className="ml-auto">
-        {error ? (
+        {isParsing ? (
+          <span className="text-muted-foreground">Parseando...</span>
+        ) : error ? (
           <span className="text-destructive">Error: JSON inválido</span>
         ) : hasJson ? (
           <span className="text-json-string">JSON válido</span>

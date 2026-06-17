@@ -34,6 +34,25 @@ function highlightText(text: string, term: string) {
   );
 }
 
+const typeBadge: Record<string, { color: string; label: string }> = {
+  string: { color: "text-json-string border-json-string/30", label: "string" },
+  number: { color: "text-json-number border-json-number/30", label: "number" },
+  boolean: { color: "text-json-boolean border-json-boolean/30", label: "boolean" },
+  null: { color: "text-json-null border-json-null/30", label: "null" },
+};
+
+function TypeBadge({ type }: { type: string }) {
+  const b = typeBadge[type];
+  if (!b) return null;
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-1.5 py-0 text-[10px] font-medium leading-none ${b.color}`}
+    >
+      {b.label}
+    </span>
+  );
+}
+
 function formatValue(node: JsonNode): { display: string; color: string } {
   switch (node.type) {
     case "string":
@@ -70,7 +89,7 @@ export function JsonTreeNode({
     const fmt = formatValue(node);
     return (
       <div
-        className="group flex items-start gap-1 rounded px-1 py-0.5 hover:bg-muted/50"
+        className="group flex items-start gap-1.5 rounded px-1 py-0.5 hover:bg-muted/50"
         style={{ paddingLeft: `${12 + indent}px` }}
       >
         {node.key !== null && (
@@ -82,6 +101,7 @@ export function JsonTreeNode({
         <span className={`font-mono text-xs ${fmt.color}`}>
           {highlightText(fmt.display, searchTerm)}
         </span>
+        <TypeBadge type={node.type} />
         <Button
           variant="ghost"
           size="icon"

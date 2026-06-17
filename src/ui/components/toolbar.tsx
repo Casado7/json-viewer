@@ -23,6 +23,7 @@ interface ToolbarProps {
   onExpandAll: () => void;
   onExport: () => void;
   hasJson: boolean;
+  isParsing: boolean;
 }
 
 export function Toolbar({
@@ -34,8 +35,9 @@ export function Toolbar({
   onExpandAll,
   onExport,
   hasJson,
+  isParsing,
 }: ToolbarProps) {
-  const disabled = !hasJson;
+  const disabled = !hasJson || isParsing;
   return (
     <div className="flex items-center gap-1.5 border-b px-3 py-2">
       <div className="flex items-center gap-1.5">
@@ -45,39 +47,46 @@ export function Toolbar({
 
       <Separator orientation="vertical" className="mx-2 h-5" />
 
-      <Button variant="ghost" size="sm" onClick={onFormat}>
-        Formatear
-      </Button>
-      <Button variant="ghost" size="sm" onClick={onMinify}>
-        <Shrink data-icon="inline-start" />
-        Minificar
-      </Button>
+      <div data-slot="button-group" className="flex">
+        <Button variant="ghost" size="sm" onClick={onFormat}>
+          <FileJson data-icon="inline-start" />
+          Formatear
+        </Button>
+        <Button variant="ghost" size="sm" onClick={onMinify}>
+          <Shrink data-icon="inline-start" />
+          Minificar
+        </Button>
+      </div>
 
       <Separator orientation="vertical" className="mx-2 h-5" />
 
-      <Button variant="ghost" size="sm" onClick={onCopy} disabled={disabled}>
-        <Copy data-icon="inline-start" />
-        Copiar
-      </Button>
-      <Button variant="ghost" size="sm" onClick={onExport} disabled={disabled}>
-        <Download data-icon="inline-start" />
-        Exportar
-      </Button>
-      <Button variant="ghost" size="sm" onClick={onClear} disabled={disabled}>
-        <Trash2 data-icon="inline-start" />
-        Limpiar
-      </Button>
+      <div data-slot="button-group" className="flex">
+        <Button variant="ghost" size="sm" onClick={onCopy} disabled={disabled}>
+          <Copy data-icon="inline-start" />
+          Copiar
+        </Button>
+        <Button variant="ghost" size="sm" onClick={onExport} disabled={disabled}>
+          <Download data-icon="inline-start" />
+          Exportar
+        </Button>
+        <Button variant="ghost" size="sm" onClick={onClear} disabled={disabled}>
+          <Trash2 data-icon="inline-start" />
+          Limpiar
+        </Button>
+      </div>
 
       <Separator orientation="vertical" className="mx-2 h-5" />
 
-      <Button variant="ghost" size="sm" onClick={onCollapseAll} disabled={disabled}>
-        <Minimize2 data-icon="inline-start" />
-        Colapsar
-      </Button>
-      <Button variant="ghost" size="sm" onClick={onExpandAll} disabled={disabled}>
-        <Maximize2 data-icon="inline-start" />
-        Expandir
-      </Button>
+      <div data-slot="button-group" className="flex">
+        <Button variant="ghost" size="sm" onClick={onCollapseAll} disabled={disabled}>
+          <Minimize2 data-icon="inline-start" />
+          Colapsar
+        </Button>
+        <Button variant="ghost" size="sm" onClick={onExpandAll} disabled={disabled}>
+          <Maximize2 data-icon="inline-start" />
+          Expandir
+        </Button>
+      </div>
 
       <div className="ml-auto flex items-center gap-2">
         <AccentSelector />

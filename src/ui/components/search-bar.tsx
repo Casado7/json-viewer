@@ -3,6 +3,11 @@
 import { Search, X, ChevronUp, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useCallback, useEffect, useState } from "react";
 
 interface SearchBarProps {
@@ -66,26 +71,41 @@ export function SearchBar({
       )}
       {resultCount > 1 && (
         <>
-          <Button variant="ghost" size="icon" className="size-6" onClick={onPrev}>
-            <ChevronUp className="size-3" />
-          </Button>
-          <Button variant="ghost" size="icon" className="size-6" onClick={onNext}>
-            <ChevronDown className="size-3" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" className="size-6" onClick={onPrev}>
+                <ChevronUp className="size-3" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Anterior</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" className="size-6" onClick={onNext}>
+                <ChevronDown className="size-3" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Siguiente</TooltipContent>
+          </Tooltip>
         </>
       )}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="size-6"
-        onClick={() => {
-          setOpen(false);
-          setValue("");
-          onSearch("");
-        }}
-      >
-        <X className="size-3" />
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-6"
+            onClick={() => {
+              setOpen(false);
+              setValue("");
+              onSearch("");
+            }}
+          >
+            <X className="size-3" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">Cerrar búsqueda</TooltipContent>
+      </Tooltip>
     </div>
   );
 }

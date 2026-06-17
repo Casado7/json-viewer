@@ -24,6 +24,7 @@ export default function Home() {
     error: null as string | null,
     searchTerm: "",
   });
+  const [isParsing, setIsParsing] = useState(false);
 
   useEffect(() => {
     const initial = useCase.loadInitialState();
@@ -37,8 +38,10 @@ export default function Home() {
     (value: string) => {
       textRef.current = value;
       setState((prev) => ({ ...prev, text: value }));
+      setIsParsing(true);
       useCase.processInput(value, (partial) => {
         setState((prev) => ({ ...prev, ...partial }));
+        setIsParsing(false);
       });
     },
     [useCase]
@@ -92,6 +95,7 @@ export default function Home() {
         onExpandAll={() => treeRef.current?.expandAll()}
         onExport={handleExport}
         hasJson={hasJson}
+        isParsing={isParsing}
       />
       <div className="flex-1 min-h-0 overflow-hidden">
         <ResizablePanelGroup orientation="horizontal" className="h-full">
@@ -113,7 +117,7 @@ export default function Home() {
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
-      <StatusBar text={state.text} error={state.error} hasJson={hasJson} />
+      <StatusBar text={state.text} error={state.error} hasJson={hasJson} isParsing={isParsing} />
     </div>
   );
 }

@@ -31,7 +31,7 @@ export function AccentSelector() {
 
   return (
     <Select value={accent} onValueChange={(v) => setAccent(v as AccentColor)}>
-      <SelectTrigger className="w-[130px]">
+      <SelectTrigger className="w-[150px]">
         <div className="flex items-center gap-2">
           <span className={`block size-3 rounded-full ${colorMap[accent]}`} />
           <SelectValue />
