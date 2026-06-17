@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Check } from "lucide-react";
+import { toast } from "sonner";
 
 const colorMap: Record<AccentColor, string> = {
   neutral: "bg-neutral-500",
@@ -30,7 +31,13 @@ export function AccentSelector() {
   const { accent, setAccent } = useAccent();
 
   return (
-    <Select value={accent} onValueChange={(v) => setAccent(v as AccentColor)}>
+    <Select
+      value={accent}
+      onValueChange={(v) => {
+        setAccent(v as AccentColor);
+        toast.success(`Acento: ${accentColorLabels[v as AccentColor]}`);
+      }}
+    >
       <SelectTrigger className="w-[150px]">
         <div className="flex items-center gap-2">
           <span className={`block size-3 rounded-full ${colorMap[accent]}`} />

@@ -80,7 +80,8 @@ export default function Home() {
   const handleClear = useCallback(() => {
     textRef.current = "";
     setState({ text: "", tree: null, error: null, searchTerm: "" });
-  }, []);
+    useCase.notifyClear();
+  }, [useCase]);
 
   const hasJson = !!state.tree;
 
@@ -91,8 +92,14 @@ export default function Home() {
         onMinify={handleMinify}
         onCopy={handleCopy}
         onClear={handleClear}
-        onCollapseAll={() => treeRef.current?.collapseAll()}
-        onExpandAll={() => treeRef.current?.expandAll()}
+        onCollapseAll={() => {
+          treeRef.current?.collapseAll();
+          useCase.notifyCollapse();
+        }}
+        onExpandAll={() => {
+          treeRef.current?.expandAll();
+          useCase.notifyExpand();
+        }}
         onExport={handleExport}
         hasJson={hasJson}
         isParsing={isParsing}

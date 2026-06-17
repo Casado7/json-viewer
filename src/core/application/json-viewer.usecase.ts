@@ -128,4 +128,16 @@ export class JsonViewerUseCase {
   clearState(): JsonViewerState {
     return { text: "", tree: null, error: null, searchTerm: "" };
   }
+
+  notifyClear(): void {
+    this.toast.success("Contenido limpiado");
+  }
+
+  notifyCollapse(): void {
+    this.toast.success("Nodos colapsados");
+  }
+
+  notifyExpand(): void {
+    this.toast.success("Nodos expandidos");
+  }
 }

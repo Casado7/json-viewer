@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Check } from "lucide-react";
+import { toast } from "sonner";
 
 const themeColorMap: Record<BaseTheme, string> = {
   neutral: "bg-neutral-500",
@@ -26,7 +27,13 @@ export function BaseThemeSelector() {
   const { baseTheme, setBaseTheme } = useAccent();
 
   return (
-    <Select value={baseTheme} onValueChange={(v) => setBaseTheme(v as BaseTheme)}>
+    <Select
+      value={baseTheme}
+      onValueChange={(v) => {
+        setBaseTheme(v as BaseTheme);
+        toast.success(`Tema: ${baseThemeLabels[v as BaseTheme]}`);
+      }}
+    >
       <SelectTrigger className="w-[130px]">
         <div className="flex items-center gap-2">
           <span className={`block size-3 rounded-full ${themeColorMap[baseTheme]}`} />

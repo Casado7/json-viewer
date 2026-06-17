@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function ModeToggle() {
   const { setTheme } = useTheme();
@@ -36,15 +37,15 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem onClick={() => { setTheme("light"); toast.success("Modo claro"); }}>
           <Sun data-icon="inline-start" />
           Claro
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem onClick={() => { setTheme("dark"); toast.success("Modo oscuro"); }}>
           <Moon data-icon="inline-start" />
           Oscuro
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
+        <DropdownMenuItem onClick={() => { setTheme("system"); toast.success("Modo sistema"); }}>
           <Monitor data-icon="inline-start" />
           Sistema
         </DropdownMenuItem>
