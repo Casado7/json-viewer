@@ -25,7 +25,7 @@ export function StatusBar({ text, error, hasJson, isParsing }: StatusBarProps) {
         ) : error ? (
           <span className="text-destructive">Error: JSON inválido</span>
         ) : hasJson ? (
-          <span className="text-json-string">JSON válido</span>
+          <span className="text-primary">JSON válido</span>
         ) : (
           "Sin datos"
         )}

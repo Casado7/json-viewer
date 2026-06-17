@@ -119,7 +119,7 @@ export function JsonTreeNode({
               window.open(node.value as string, "_blank", "noopener,noreferrer");
             }}
           >
-            <ExternalLink className="size-2.5" />
+            <ExternalLink className="size-2.5 text-primary" />
           </Button>
         )}
         <Button
