@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useMemo, useState, useEffect, forwardRef, useImperativeHandle } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -123,7 +122,7 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
             )
           }
         />
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-auto">
           <div className="py-2">
             <JsonTreeNode
               node={tree}
@@ -136,7 +135,7 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
               onCopy={(value: string) => useCase.copyValue(value)}
             />
           </div>
-        </ScrollArea>
+        </div>
       </CardContent>
     </Card>
   );

@@ -512,10 +512,25 @@
   }
 }
 
-/* === Scrollbar accent === */
+/* === Native scrollbar styling === */
 
-[data-slot="scroll-area-thumb"] {
-  background-color: color-mix(in oklch, var(--primary) 40%, transparent) !important;
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 3px;
 }
 
 /* === Accent color themes === */
