@@ -19,9 +19,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Visor JSON",
   description: "Un visor de JSON con navegación en árbol",
-  icons: {
-    icon: "/favicon.svg",
-  },
 };
 
 export default function RootLayout({

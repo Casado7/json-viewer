@@ -12,6 +12,21 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import type { AccentColor, BaseTheme } from "@/config/theme-config";
 import { createLocalStorageThemeAdapter } from "@/infrastructure/adapters/localStorage-theme.adapter";
 
+const accentHex: Record<AccentColor, string> = {
+  neutral: "#343434",
+  gray: "#7a7a7a",
+  slate: "#6b6f7a",
+  zinc: "#999999",
+  stone: "#7a776b",
+  red: "#dc2626",
+  rose: "#e11d48",
+  orange: "#ea580c",
+  green: "#22c55e",
+  blue: "#3b82f6",
+  yellow: "#ca8a04",
+  violet: "#8b5cf6",
+};
+
 interface ThemeContextValue {
   accent: AccentColor;
   setAccent: (color: AccentColor) => void;
@@ -77,14 +92,17 @@ export function ThemeProvider({
 
   useEffect(() => {
     if (!mounted) return;
-    const color = getComputedStyle(document.documentElement)
-      .getPropertyValue("--primary")
-      .trim() || "#2dd4bf";
+    const color = accentHex[accent] || "#3b82f6";
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1"/><path d="M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1"/></svg>`;
     const dataUri = `data:image/svg+xml,${encodeURIComponent(svg)}`;
-    const link = document.querySelector("link[rel='icon']");
-    if (link) link.setAttribute("href", dataUri);
-  }, [accent, baseTheme, mounted]);
+    let link = document.querySelector("link[rel='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.href = dataUri;
+  }, [accent, mounted]);
 
   return (
     <ThemeContext value={{ accent, setAccent, baseTheme, setBaseTheme }}>
