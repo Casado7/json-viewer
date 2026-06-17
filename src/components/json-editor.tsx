@@ -11,8 +11,8 @@ interface JsonEditorProps {
 
 export function JsonEditor({ value, onChange, error }: JsonEditorProps) {
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b px-3 py-1.5">
+    <div className="flex h-full w-full flex-col">
+      <div className="flex items-center justify-between border-b px-3 py-1.5 shrink-0">
         <span className="text-xs font-medium text-muted-foreground">
           Editor
         </span>
@@ -23,15 +23,15 @@ export function JsonEditor({ value, onChange, error }: JsonEditorProps) {
           </span>
         )}
       </div>
-      <ScrollArea className="flex-1 w-full overflow-hidden">
+      <div className="flex-1 w-full min-h-0">
         <textarea
-          className="min-h-full w-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed outline-none"
+          className="h-full w-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed outline-none"
           placeholder="Paste or type your JSON here..."
           value={value}
           onChange={(e) => onChange(e.target.value)}
           spellCheck={false}
         />
-      </ScrollArea>
+      </div>
     </div>
   );
 }
