@@ -54,7 +54,7 @@ export function SearchBar({
       <Search className="size-3.5 text-muted-foreground shrink-0" />
       <Input
         className="h-7 text-xs flex-1 min-w-0"
-        placeholder="Search (Ctrl+F)"
+        placeholder="Buscar (Ctrl+F)"
         value={value}
         onChange={(e) => handleChange(e.target.value)}
         autoFocus

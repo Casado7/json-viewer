@@ -79,9 +79,9 @@ export default function Home() {
       const formatted = formatJson(text);
       setText(formatted);
       parseAndBuild(formatted);
-      toast.success("JSON formatted");
+      toast.success("JSON formateado");
     } catch {
-      toast.error("Invalid JSON");
+      toast.error("JSON inválido");
     }
   }, [text, parseAndBuild]);
 
@@ -90,16 +90,16 @@ export default function Home() {
       const minified = minifyJson(text);
       setText(minified);
       parseAndBuild(minified);
-      toast.success("JSON minified");
+      toast.success("JSON minificado");
     } catch {
-      toast.error("Invalid JSON");
+      toast.error("JSON inválido");
     }
   }, [text, parseAndBuild]);
 
   const handleCopy = useCallback(() => {
     if (!text.trim()) return;
     navigator.clipboard.writeText(text);
-    toast.success("Copied to clipboard");
+    toast.success("Copiado al portapapeles");
   }, [text]);
 
   const handleClear = useCallback(() => {
@@ -120,9 +120,9 @@ export default function Home() {
       a.download = "data.json";
       a.click();
       URL.revokeObjectURL(url);
-      toast.success("File downloaded");
+      toast.success("Archivo descargado");
     } catch {
-      toast.error("Invalid JSON");
+      toast.error("JSON inválido");
     }
   }, [text]);
 

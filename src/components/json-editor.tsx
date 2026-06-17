@@ -25,7 +25,7 @@ export function JsonEditor({ value, onChange, error }: JsonEditorProps) {
       <div className="flex min-h-0 flex-1">
         <textarea
           className="size-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed outline-none"
-          placeholder="Paste or type your JSON here..."
+          placeholder="Pega o escribe tu JSON aquí..."
           value={value}
           onChange={(e) => onChange(e.target.value)}
           spellCheck={false}

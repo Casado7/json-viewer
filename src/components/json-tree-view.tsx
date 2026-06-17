@@ -69,9 +69,9 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
         </div>
         <div className="flex min-h-0 flex-1 items-center justify-center">
           <Empty>
-            <EmptyTitle>No JSON data</EmptyTitle>
+            <EmptyTitle>Sin datos JSON</EmptyTitle>
             <EmptyDescription>
-              Paste or type JSON in the editor to preview it here.
+              Pega o escribe JSON en el editor para previsualizarlo aquí.
             </EmptyDescription>
           </Empty>
         </div>
@@ -113,9 +113,9 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
             onCopy={async (value: string) => {
               try {
                 await navigator.clipboard.writeText(value);
-                toast.success("Copied to clipboard");
+                toast.success("Copiado al portapapeles");
               } catch {
-                toast.error("Failed to copy");
+                toast.error("Error al copiar");
               }
             }}
           />

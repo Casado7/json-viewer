@@ -42,17 +42,17 @@ export function Toolbar({
     <div className="flex items-center gap-1.5 border-b px-3 py-2">
       <div className="flex items-center gap-1.5">
         <FileJson className="size-5 text-primary" />
-        <span className="text-sm font-semibold">JSON Viewer</span>
+        <span className="text-sm font-semibold">Visor JSON</span>
       </div>
 
       <Separator orientation="vertical" className="mx-2 h-5" />
 
       <Button variant="ghost" size="sm" onClick={onFormat}>
-        Format
+        Formatear
       </Button>
       <Button variant="ghost" size="sm" onClick={onMinify}>
         <Shrink data-icon="inline-start" />
-        Minify
+        Minificar
       </Button>
 
       <Separator orientation="vertical" className="mx-2 h-5" />
@@ -64,7 +64,7 @@ export function Toolbar({
         disabled={disabled}
       >
         <Copy data-icon="inline-start" />
-        Copy
+        Copiar
       </Button>
       <Button
         variant="ghost"
@@ -73,7 +73,7 @@ export function Toolbar({
         disabled={disabled}
       >
         <Download data-icon="inline-start" />
-        Export
+        Exportar
       </Button>
       <Button
         variant="ghost"
@@ -82,7 +82,7 @@ export function Toolbar({
         disabled={disabled}
       >
         <Trash2 data-icon="inline-start" />
-        Clear
+        Limpiar
       </Button>
 
       <Separator orientation="vertical" className="mx-2 h-5" />
@@ -94,7 +94,7 @@ export function Toolbar({
         disabled={disabled}
       >
         <Maximize2 data-icon="inline-start" />
-        Collapse
+        Colapsar
       </Button>
       <Button
         variant="ghost"
@@ -102,7 +102,7 @@ export function Toolbar({
         onClick={onExpandAll}
         disabled={disabled}
       >
-        Expand
+        Expandir
       </Button>
 
       <div className="ml-auto flex items-center gap-2">
