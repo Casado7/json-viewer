@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState, forwardRef, useImperativeHandle } from "react";
+import { useCallback, useMemo, useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SearchBar } from "@/ui/components/search-bar";
 import { JsonTreeNode } from "@/ui/components/json-tree-node";
@@ -26,6 +26,10 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
   const [searchResults, setSearchResults] = useState<string[]>([]);
   const [currentSearchIdx, setCurrentSearchIdx] = useState(0);
 
+  useEffect(() => {
+    if (tree) setAllExpanded(true);
+  }, [tree]);
+
   const collapseAllTree = useCallback(() => {
     setExpandedPaths(new Set());
     setAllExpanded(false);
@@ -44,12 +48,8 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
       else next.add(path);
       return next;
     });
+    setAllExpanded(false);
   }, []);
-
-  const displayExpanded = useMemo(() => {
-    if (allExpanded) return new Set<string>(["_all_"]);
-    return expandedPaths;
-  }, [allExpanded, expandedPaths]);
 
   const searchResultsList = useMemo(() => {
     if (!tree || !searchTerm) return [];
@@ -101,7 +101,8 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
             depth={0}
             path={tree.key ?? "(root)"}
             searchTerm={searchTerm}
-            expandedPaths={displayExpanded}
+            expandedPaths={expandedPaths}
+            allExpanded={allExpanded}
             onToggle={toggleNode}
             onCopy={async (value: string) => {
               try {

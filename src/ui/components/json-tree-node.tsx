@@ -12,6 +12,7 @@ interface JsonTreeNodeProps {
   path: string;
   searchTerm: string;
   expandedPaths: Set<string>;
+  allExpanded: boolean;
   onToggle: (path: string) => void;
   onCopy: (value: string) => void;
 }
@@ -54,13 +55,14 @@ export function JsonTreeNode({
   path,
   searchTerm,
   expandedPaths,
+  allExpanded,
   onToggle,
   onCopy,
 }: JsonTreeNodeProps) {
   const isLeaf = node.children === null;
   const isExpandable = !isLeaf && node.size > 0;
   const indent = depth * 16;
-  const isExpanded = expandedPaths.has(path);
+  const isExpanded = allExpanded || expandedPaths.has(path);
   const matchSelf = hasSearchMatch(node, searchTerm);
   const shouldExpand = isExpanded || (!!searchTerm && matchSelf);
 
@@ -149,6 +151,7 @@ export function JsonTreeNode({
                 path={childPath}
                 searchTerm={searchTerm}
                 expandedPaths={expandedPaths}
+                allExpanded={allExpanded}
                 onToggle={onToggle}
                 onCopy={onCopy}
               />

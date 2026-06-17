@@ -10,6 +10,7 @@ import {
   Trash2,
   Shrink,
   Maximize2,
+  Minimize2,
   Download,
 } from "lucide-react";
 
@@ -70,10 +71,11 @@ export function Toolbar({
       <Separator orientation="vertical" className="mx-2 h-5" />
 
       <Button variant="ghost" size="sm" onClick={onCollapseAll} disabled={disabled}>
-        <Maximize2 data-icon="inline-start" />
+        <Minimize2 data-icon="inline-start" />
         Colapsar
       </Button>
       <Button variant="ghost" size="sm" onClick={onExpandAll} disabled={disabled}>
+        <Maximize2 data-icon="inline-start" />
         Expandir
       </Button>
 
