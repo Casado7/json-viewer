@@ -10,7 +10,7 @@ interface JsonEditorProps {
 
 export function JsonEditor({ value, onChange, error }: JsonEditorProps) {
   return (
-    <div className="flex size-full flex-col">
+    <div className="flex flex-1 flex-col">
       <div className="flex shrink-0 items-center justify-between border-b px-3 py-1.5">
         <span className="text-xs font-medium text-muted-foreground">
           Editor
