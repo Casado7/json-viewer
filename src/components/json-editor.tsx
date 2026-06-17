@@ -23,9 +23,9 @@ export function JsonEditor({ value, onChange, error }: JsonEditorProps) {
           </span>
         )}
       </div>
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 w-full overflow-hidden">
         <textarea
-          className="h-full w-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed outline-none"
+          className="min-h-full w-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed outline-none"
           placeholder="Paste or type your JSON here..."
           value={value}
           onChange={(e) => onChange(e.target.value)}
