@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ModeToggle } from "@/ui/components/mode-toggle";
 import { AccentSelector } from "@/ui/components/accent-selector";
+import { BaseThemeSelector } from "@/ui/components/base-theme-selector";
 import {
   FileJson,
   Copy,
@@ -89,6 +90,7 @@ export function Toolbar({
       </div>
 
       <div className="ml-auto flex items-center gap-2">
+        <BaseThemeSelector />
         <AccentSelector />
         <ModeToggle />
       </div>
