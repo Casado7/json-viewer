@@ -7,6 +7,7 @@ import { JsonTreeNode } from "@/ui/components/json-tree-node";
 import type { JsonNode } from "@/core/domain/entities/json-node";
 import { searchInTree } from "@/core/domain/services/search-service";
 import { Empty, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
+import { useUseCase } from "@/ui/providers/use-case-provider";
 
 export interface TreeViewHandle {
   collapseAll: () => void;
@@ -21,6 +22,7 @@ interface JsonTreeViewProps {
 
 export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
   function JsonTreeView({ tree, searchTerm, onSearch }, ref) {
+  const useCase = useUseCase();
   const [expandedPaths, setExpandedPaths] = useState<Set<string>>(new Set());
   const [allExpanded, setAllExpanded] = useState(false);
   const [searchResults, setSearchResults] = useState<string[]>([]);
@@ -104,11 +106,7 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
             expandedPaths={expandedPaths}
             allExpanded={allExpanded}
             onToggle={toggleNode}
-            onCopy={async (value: string) => {
-              try {
-                await navigator.clipboard.writeText(value);
-              } catch {}
-            }}
+            onCopy={(value: string) => useCase.copyValue(value)}
           />
         </div>
       </ScrollArea>
