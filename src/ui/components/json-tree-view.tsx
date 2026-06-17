@@ -2,12 +2,14 @@
 
 import { useCallback, useMemo, useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/ui/components/search-bar";
 import { JsonTreeNode } from "@/ui/components/json-tree-node";
 import type { JsonNode } from "@/core/domain/entities/json-node";
 import { searchInTree } from "@/core/domain/services/search-service";
 import { Empty, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { useUseCase } from "@/ui/providers/use-case-provider";
+import { Minimize2, Maximize2 } from "lucide-react";
 
 export interface TreeViewHandle {
   collapseAll: () => void;
@@ -35,11 +37,13 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
   const collapseAllTree = useCallback(() => {
     setExpandedPaths(new Set());
     setAllExpanded(false);
-  }, []);
+    useCase.notifyCollapse();
+  }, [useCase]);
 
   const expandAllTree = useCallback(() => {
     setAllExpanded(true);
-  }, []);
+    useCase.notifyExpand();
+  }, [useCase]);
 
   useImperativeHandle(ref, () => ({ collapseAll: collapseAllTree, expandAll: expandAllTree }), [collapseAllTree, expandAllTree]);
 
@@ -57,6 +61,8 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
     if (!tree || !searchTerm) return [];
     return searchInTree(tree, searchTerm);
   }, [tree, searchTerm]);
+
+  const disabled = !tree;
 
   if (!tree) {
     return (
@@ -78,8 +84,18 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex shrink-0 items-center justify-between border-b px-3 py-1.5">
+      <div className="flex shrink-0 items-center gap-2 border-b px-3 py-1.5">
         <span className="text-xs font-medium text-muted-foreground">Visor</span>
+        <div data-slot="button-group" className="flex">
+          <Button variant="ghost" size="xs" onClick={collapseAllTree} aria-disabled={disabled || undefined} data-disabled={disabled || undefined} className={disabled ? "pointer-events-none opacity-50" : ""}>
+            <Minimize2 data-icon="inline-start" />
+            Colapsar
+          </Button>
+          <Button variant="ghost" size="xs" onClick={expandAllTree} aria-disabled={disabled || undefined} data-disabled={disabled || undefined} className={disabled ? "pointer-events-none opacity-50" : ""}>
+            <Maximize2 data-icon="inline-start" />
+            Expandir
+          </Button>
+        </div>
       </div>
       <SearchBar
         onSearch={onSearch}

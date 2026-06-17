@@ -11,13 +11,12 @@ import { Toolbar } from "@/ui/components/toolbar";
 import { JsonEditor } from "@/ui/components/json-editor";
 import { JsonTreeView } from "@/ui/components/json-tree-view";
 import { StatusBar } from "@/ui/components/status-bar";
-import type { TreeViewHandle } from "@/ui/components/json-tree-view";
 import { useUseCase } from "@/ui/providers/use-case-provider";
 
 export default function Home() {
   const useCase = useUseCase();
   const textRef = useRef("");
-  const treeRef = useRef<TreeViewHandle>(null);
+  const treeRef = useRef(null);
   const [state, setState] = useState({
     text: "",
     tree: null as JsonNode | null,
@@ -84,26 +83,11 @@ export default function Home() {
   }, [useCase]);
 
   const hasJson = !!state.tree;
+  const disabled = !hasJson || isParsing;
 
   return (
     <div className="flex h-screen flex-col">
-      <Toolbar
-        onFormat={handleFormat}
-        onMinify={handleMinify}
-        onCopy={handleCopy}
-        onClear={handleClear}
-        onCollapseAll={() => {
-          treeRef.current?.collapseAll();
-          useCase.notifyCollapse();
-        }}
-        onExpandAll={() => {
-          treeRef.current?.expandAll();
-          useCase.notifyExpand();
-        }}
-        onExport={handleExport}
-        hasJson={hasJson}
-        isParsing={isParsing}
-      />
+      <Toolbar />
       <div className="flex-1 min-h-0 overflow-hidden">
         <ResizablePanelGroup orientation="horizontal" className="h-full">
           <ResizablePanel defaultSize={40} minSize={25}>
@@ -111,6 +95,12 @@ export default function Home() {
               value={state.text}
               onChange={handleChange}
               error={state.error}
+              onFormat={handleFormat}
+              onMinify={handleMinify}
+              onCopy={handleCopy}
+              onExport={handleExport}
+              onClear={handleClear}
+              disabled={disabled}
             />
           </ResizablePanel>
           <ResizableHandle withHandle />
