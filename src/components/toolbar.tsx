@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -34,6 +35,9 @@ export function Toolbar({
   onExport,
   hasJson,
 }: ToolbarProps) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const disabled = mounted ? !hasJson : true;
   return (
     <div className="flex items-center gap-1.5 border-b px-3 py-2">
       <div className="flex items-center gap-1.5">
@@ -57,7 +61,7 @@ export function Toolbar({
         variant="ghost"
         size="sm"
         onClick={onCopy}
-        disabled={!hasJson}
+        disabled={disabled}
       >
         <Copy data-icon="inline-start" />
         Copy
@@ -66,7 +70,7 @@ export function Toolbar({
         variant="ghost"
         size="sm"
         onClick={onExport}
-        disabled={!hasJson}
+        disabled={disabled}
       >
         <Download data-icon="inline-start" />
         Export
@@ -75,7 +79,7 @@ export function Toolbar({
         variant="ghost"
         size="sm"
         onClick={onClear}
-        disabled={!hasJson}
+        disabled={disabled}
       >
         <Trash2 data-icon="inline-start" />
         Clear
@@ -87,7 +91,7 @@ export function Toolbar({
         variant="ghost"
         size="sm"
         onClick={onCollapseAll}
-        disabled={!hasJson}
+        disabled={disabled}
       >
         <Maximize2 data-icon="inline-start" />
         Collapse
@@ -96,7 +100,7 @@ export function Toolbar({
         variant="ghost"
         size="sm"
         onClick={onExpandAll}
-        disabled={!hasJson}
+        disabled={disabled}
       >
         Expand
       </Button>
