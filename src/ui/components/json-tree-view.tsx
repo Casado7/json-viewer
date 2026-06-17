@@ -72,7 +72,7 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
 
   if (!tree) {
     return (
-      <Card className="flex flex-1 flex-col gap-0 rounded-none border-0">
+      <Card className="flex flex-1 flex-col gap-0 rounded-none border-0 min-w-0 [--card-spacing:0px]">
         <CardHeader className="flex shrink-0 flex-row items-center border-b px-3 py-2">
           <CardTitle className="text-xs font-medium text-muted-foreground m-0">
             Visor
@@ -91,7 +91,7 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
   }
 
   return (
-    <Card className="flex flex-1 flex-col gap-0 rounded-none border-0">
+    <Card className="flex flex-1 flex-col gap-0 rounded-none border-0 min-w-0 [--card-spacing:0px]">
       <CardHeader className="flex shrink-0 flex-row items-center gap-2 border-b px-3 py-2">
         <CardTitle className="text-xs font-medium text-muted-foreground m-0">
           Visor

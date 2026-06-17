@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Card,
   CardHeader,
@@ -34,7 +34,7 @@ export function JsonEditor({
   disabled,
 }: JsonEditorProps) {
   return (
-    <Card className="flex flex-1 flex-col gap-0 rounded-none border-0 border-r">
+    <Card className="flex flex-1 flex-col gap-0 rounded-none border-0 border-r min-w-0 [--card-spacing:0px]">
       <CardHeader className="flex shrink-0 flex-row items-center gap-2 border-b px-3 py-2">
         <CardTitle className="text-xs font-medium text-muted-foreground m-0">
           Editor
@@ -69,15 +69,13 @@ export function JsonEditor({
         )}
       </CardHeader>
       <CardContent className="flex min-h-0 flex-1 p-0">
-        <ScrollArea className="flex-1 w-full overflow-hidden">
-          <textarea
-            className="min-h-full w-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed outline-none"
-            placeholder="Pega o escribe tu JSON aquí..."
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            spellCheck={false}
-          />
-        </ScrollArea>
+        <Textarea
+          className="h-full w-full resize-none border-0 bg-transparent p-3 font-mono text-sm leading-relaxed"
+          placeholder="Pega o escribe tu JSON aquí..."
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          spellCheck={false}
+        />
       </CardContent>
     </Card>
   );
