@@ -37,7 +37,7 @@ function highlightText(text: string, term: string) {
 const typeBadge: Record<string, { color: string; label: string }> = {
   string: { color: "text-json-string border-json-string/30", label: "string" },
   number: { color: "text-json-number border-json-number/30", label: "number" },
-  boolean: { color: "text-json-boolean border-json-boolean/30", label: "boolean" },
+  boolean: { color: "text-json-true border-json-true/30", label: "boolean" },
   null: { color: "text-json-null border-json-null/30", label: "null" },
 };
 
@@ -60,7 +60,10 @@ function formatValue(node: JsonNode): { display: string; color: string } {
     case "number":
       return { display: String(node.value), color: "text-json-number" };
     case "boolean":
-      return { display: String(node.value), color: "text-json-boolean" };
+      return {
+        display: String(node.value),
+        color: node.value === true ? "text-json-true" : "text-json-false",
+      };
     case "null":
       return { display: "null", color: "text-json-null" };
     default:
