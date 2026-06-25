@@ -8,6 +8,11 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import type { JsonNode } from "@/core/domain/entities/json-node";
 import { stringifyChildren } from "@/core/domain/services/json-service";
 import { hasSearchMatch } from "@/core/domain/services/search-service";
@@ -82,6 +87,14 @@ function isUrl(value: unknown): value is string {
   return typeof value === "string" && (value.startsWith("http://") || value.startsWith("https://"));
 }
 
+const IMAGE_EXT = ["jpg", "jpeg", "png", "gif", "webp", "svg", "avif", "bmp"];
+
+function isImageUrl(value: unknown): value is string {
+  if (!isUrl(value)) return false;
+  const url = (value as string).toLowerCase();
+  return IMAGE_EXT.some((ext) => url.includes(`.${ext}`));
+}
+
 function handleOpenUrl(value: unknown) {
   if (isUrl(value)) {
     window.open(value, "_blank", "noopener,noreferrer");
@@ -121,19 +134,43 @@ export function JsonTreeNode({
                 <span className="text-muted-foreground">: </span>
               </span>
             )}
-            <button
-              className={`font-mono text-xs ${fmt.color} text-left cursor-pointer hover:underline`}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (isUrl(node.value)) {
-                  handleOpenUrl(node.value);
-                } else {
-                  onCopy(node.value as string);
-                }
-              }}
-            >
-              {highlightText(fmt.display, searchTerm)}
-            </button>
+            {isImageUrl(node.value) ? (
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <button
+                    className={`font-mono text-xs ${fmt.color} text-left cursor-pointer hover:underline`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenUrl(node.value);
+                    }}
+                  >
+                    {highlightText(fmt.display, searchTerm)}
+                  </button>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-72 p-0 overflow-hidden" side="right" align="start">
+                  <img
+                    src={node.value as string}
+                    alt="Preview"
+                    className="w-full h-auto"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                  />
+                </HoverCardContent>
+              </HoverCard>
+            ) : (
+              <button
+                className={`font-mono text-xs ${fmt.color} text-left cursor-pointer hover:underline`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (isUrl(node.value)) {
+                    handleOpenUrl(node.value);
+                  } else {
+                    onCopy(node.value as string);
+                  }
+                }}
+              >
+                {highlightText(fmt.display, searchTerm)}
+              </button>
+            )}
             <TypeBadge type={node.type} />
             {isUrl(node.value) && (
               <Button
