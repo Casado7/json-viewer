@@ -168,13 +168,46 @@ export default function Home() {
     return (
       <div className="flex h-screen flex-col">
         <div className="flex items-center gap-1.5 border-b px-3 py-2">
-          <div className="size-4 animate-pulse rounded bg-muted-foreground/20" />
-          <div className="ml-2 h-4 w-20 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="size-5 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="ml-1.5 h-5 w-20 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="ml-auto flex items-center gap-2">
+            <div className="size-8 animate-pulse rounded bg-muted-foreground/20" />
+            <div className="size-8 animate-pulse rounded bg-muted-foreground/20" />
+            <div className="size-8 animate-pulse rounded bg-muted-foreground/20" />
+          </div>
         </div>
-        <div className="flex flex-1">
-          <Skeleton className="h-full w-full rounded-none" />
+        <div className="flex flex-1 min-h-0">
+          <div className="flex flex-[2] flex-col border-r">
+            <div className="flex shrink-0 items-center gap-2 border-b px-3 pt-2 pb-3">
+              <div className="h-3.5 w-10 animate-pulse rounded bg-muted-foreground/20" />
+              <div className="flex gap-0.5">
+                <div className="h-6 w-16 animate-pulse rounded bg-muted-foreground/20" />
+                <div className="h-6 w-16 animate-pulse rounded bg-muted-foreground/20" />
+                <div className="h-6 w-14 animate-pulse rounded bg-muted-foreground/20" />
+                <div className="h-6 w-16 animate-pulse rounded bg-muted-foreground/20" />
+                <div className="h-6 w-14 animate-pulse rounded bg-muted-foreground/20" />
+              </div>
+            </div>
+            <Skeleton className="flex-1 w-full rounded-none" />
+          </div>
+          <div className="flex w-1 shrink-0 bg-border" />
+          <div className="flex flex-[3] flex-col">
+            <div className="flex shrink-0 items-center gap-2 border-b px-3 pt-2 pb-3">
+              <div className="h-3.5 w-10 animate-pulse rounded bg-muted-foreground/20" />
+              <div className="flex gap-0.5">
+                <div className="h-6 w-16 animate-pulse rounded bg-muted-foreground/20" />
+                <div className="h-6 w-16 animate-pulse rounded bg-muted-foreground/20" />
+              </div>
+            </div>
+            <Skeleton className="flex-1 w-full rounded-none" />
+          </div>
         </div>
-        <div className="h-[25px] border-t" />
+        <div className="flex shrink-0 items-center gap-4 border-t px-4 py-1">
+          <div className="h-3.5 w-24 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="h-3.5 w-28 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="h-3.5 w-20 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="ml-auto h-3.5 w-24 animate-pulse rounded bg-muted-foreground/20" />
+        </div>
       </div>
     );
   }
