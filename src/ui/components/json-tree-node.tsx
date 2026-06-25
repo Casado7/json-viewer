@@ -1,12 +1,11 @@
 "use client";
 
-import { ChevronRight, ChevronDown, Copy, ExternalLink, Route, Code } from "lucide-react";
+import { ChevronRight, ChevronDown, Copy, ExternalLink, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
-  ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import type { JsonNode } from "@/core/domain/entities/json-node";
@@ -90,15 +89,6 @@ function handleOpenUrl(value: unknown) {
   }
 }
 
-async function copyToClipboard(text: string) {
-  try {
-    await navigator.clipboard.writeText(text);
-    toast.success("Copiado al portapapeles");
-  } catch {
-    toast.error("Error al copiar");
-  }
-}
-
 export function JsonTreeNode({
   node,
   depth,
@@ -171,7 +161,7 @@ export function JsonTreeNode({
             </Button>
           </div>
         </ContextMenuTrigger>
-        <ContextMenuContent className="w-48">
+        <ContextMenuContent className="w-44">
           <ContextMenuItem onClick={() => onCopy(node.value as string)}>
             <Copy className="size-4" />
             <span className="ml-2">Copiar valor</span>
@@ -182,15 +172,6 @@ export function JsonTreeNode({
               <span className="ml-2">Abrir enlace</span>
             </ContextMenuItem>
           )}
-          <ContextMenuSeparator />
-          <ContextMenuItem onClick={() => copyToClipboard(path)}>
-            <Route className="size-4" />
-            <span className="ml-2">Copiar ruta</span>
-          </ContextMenuItem>
-          <ContextMenuItem onClick={() => copyToClipboard(JSON.stringify(node.value))}>
-            <Code className="size-4" />
-            <span className="ml-2">Copiar como JSON</span>
-          </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
     );
@@ -241,15 +222,10 @@ export function JsonTreeNode({
             </Button>
           </div>
         </ContextMenuTrigger>
-        <ContextMenuContent className="w-48">
+        <ContextMenuContent className="w-44">
           <ContextMenuItem onClick={() => onCopy(stringifyChildren(node))}>
             <Code className="size-4" />
             <span className="ml-2">Copiar como JSON</span>
-          </ContextMenuItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem onClick={() => copyToClipboard(path)}>
-            <Route className="size-4" />
-            <span className="ml-2">Copiar ruta</span>
           </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
