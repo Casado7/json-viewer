@@ -2,6 +2,8 @@
 
 import { ChevronRight, ChevronDown, Copy, ExternalLink, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -121,6 +123,7 @@ export function JsonTreeNode({
 
   if (isLeaf) {
     const fmt = formatValue(node);
+    const [imgLoading, setImgLoading] = useState(true);
     return (
       <ContextMenu>
         <ContextMenuTrigger asChild>
@@ -148,11 +151,13 @@ export function JsonTreeNode({
                   </button>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-72 p-0 overflow-hidden" side="right" align="start">
+                  {imgLoading && <Skeleton className="aspect-[4/3] w-full rounded-none" />}
                   <img
                     src={node.value as string}
                     alt="Preview"
-                    className="w-full h-auto"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                    className={`w-full h-auto ${imgLoading ? "hidden" : "block"}`}
+                    onLoad={() => setImgLoading(false)}
+                    onError={() => setImgLoading(false)}
                   />
                 </HoverCardContent>
               </HoverCard>
