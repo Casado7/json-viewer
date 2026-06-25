@@ -13,11 +13,13 @@ import { JsonTreeView } from "@/ui/components/json-tree-view";
 import { StatusBar } from "@/ui/components/status-bar";
 import { useUseCase } from "@/ui/providers/use-case-provider";
 import { Undo2, Redo2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Home() {
   const useCase = useUseCase();
   const textRef = useRef("");
   const treeRef = useRef(null);
+  const typingTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined as any);
   const [state, setState] = useState({
     text: "",
     tree: null as JsonNode | null,
@@ -27,6 +29,11 @@ export default function Home() {
   const [isParsing, setIsParsing] = useState(false);
   const [undoStack, setUndoStack] = useState<string[]>([]);
   const [redoStack, setRedoStack] = useState<string[]>([]);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    requestAnimationFrame(() => setIsReady(true));
+  }, []);
 
   useEffect(() => {
     const initial = useCase.loadInitialState();
@@ -35,8 +42,6 @@ export default function Home() {
       setState((prev) => ({ ...prev, ...initial }));
     }
   }, [useCase]);
-
-  const typingTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined as any);
 
   const pushUndo = useCallback(() => {
     setUndoStack((prev) => [textRef.current, ...prev].slice(0, 50));
@@ -131,6 +136,18 @@ export default function Home() {
     });
   }, [redoStack, useCase]);
 
+  const handleLoadHistory = useCallback(
+    (text: string) => {
+      pushUndo();
+      textRef.current = text;
+      setState((prev) => ({ ...prev, text }));
+      useCase.processInput(text, (partial) => {
+        setState((prev) => ({ ...prev, ...partial }));
+      });
+    },
+    [useCase]
+  );
+
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
@@ -147,17 +164,20 @@ export default function Home() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [handleUndo, handleRedo]);
 
-  const handleLoadHistory = useCallback(
-    (text: string) => {
-      pushUndo();
-      textRef.current = text;
-      setState((prev) => ({ ...prev, text }));
-      useCase.processInput(text, (partial) => {
-        setState((prev) => ({ ...prev, ...partial }));
-      });
-    },
-    [useCase]
-  );
+  if (!isReady) {
+    return (
+      <div className="flex h-screen flex-col">
+        <div className="flex items-center gap-1.5 border-b px-3 py-2">
+          <div className="size-4 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="ml-2 h-4 w-20 animate-pulse rounded bg-muted-foreground/20" />
+        </div>
+        <div className="flex flex-1">
+          <Skeleton className="h-full w-full rounded-none" />
+        </div>
+        <div className="h-[25px] border-t" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen flex-col">

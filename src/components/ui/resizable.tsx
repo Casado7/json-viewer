@@ -25,6 +25,7 @@ function ResizablePanel({ className, ...props }: ResizablePrimitive.PanelProps) 
     <ResizablePrimitive.Panel
       data-slot="resizable-panel"
       className={cn("flex size-full overflow-hidden flex-col min-w-0", className)}
+      style={{ flex: "1 1 0px" }}
       {...props}
     />
   )
