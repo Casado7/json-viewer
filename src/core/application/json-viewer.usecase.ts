@@ -140,4 +140,12 @@ export class JsonViewerUseCase {
   notifyExpand(): void {
     this.toast.success("Nodos expandidos");
   }
+
+  getHistory(): string[] {
+    return this.history.getAll();
+  }
+
+  clearHistory(): void {
+    this.history.clear();
+  }
 }

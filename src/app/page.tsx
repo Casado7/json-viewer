@@ -85,9 +85,20 @@ export default function Home() {
   const hasJson = !!state.tree;
   const disabled = !hasJson || isParsing;
 
+  const handleLoadHistory = useCallback(
+    (text: string) => {
+      textRef.current = text;
+      setState((prev) => ({ ...prev, text }));
+      useCase.processInput(text, (partial) => {
+        setState((prev) => ({ ...prev, ...partial }));
+      });
+    },
+    [useCase]
+  );
+
   return (
     <div className="flex h-screen flex-col">
-      <Toolbar />
+      <Toolbar onLoadHistory={handleLoadHistory} />
       <div className="flex-1 min-h-0 overflow-hidden">
         <ResizablePanelGroup orientation="horizontal" className="h-full">
           <ResizablePanel defaultSize={40} minSize={25}>

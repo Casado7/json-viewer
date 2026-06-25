@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import type { JsonNode } from "@/core/domain/entities/json-node";
 import { stringifyChildren } from "@/core/domain/services/json-service";
 import { hasSearchMatch } from "@/core/domain/services/search-service";
+import { toast } from "sonner";
 
 interface JsonTreeNodeProps {
   node: JsonNode;
@@ -105,9 +106,20 @@ export function JsonTreeNode({
             <span className="text-muted-foreground">: </span>
           </span>
         )}
-        <span className={`font-mono text-xs ${fmt.color}`}>
+        <button
+          className={`font-mono text-xs ${fmt.color} text-left cursor-pointer hover:underline`}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (isUrl(node.value)) {
+              window.open(node.value as string, "_blank", "noopener,noreferrer");
+              toast.success("Enlace abierto");
+            } else {
+              onCopy(node.value as string);
+            }
+          }}
+        >
           {highlightText(fmt.display, searchTerm)}
-        </span>
+        </button>
         <TypeBadge type={node.type} />
         {isUrl(node.value) && (
           <Button
