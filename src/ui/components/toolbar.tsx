@@ -3,6 +3,7 @@
 import { FileJson } from "lucide-react";
 import { ThemeMenu } from "@/ui/components/theme-menu";
 import { HistoryDialog } from "@/ui/components/history-dialog";
+import { ProjectInfo } from "@/ui/components/project-info";
 
 interface ToolbarProps {
   onLoadHistory: (text: string) => void;
@@ -16,6 +17,7 @@ export function Toolbar({ onLoadHistory }: ToolbarProps) {
         <span className="text-sm font-semibold">Visor JSON</span>
       </div>
       <div className="ml-auto flex items-center gap-2">
+        <ProjectInfo />
         <HistoryDialog onLoad={onLoadHistory} />
         <ThemeMenu />
       </div>
