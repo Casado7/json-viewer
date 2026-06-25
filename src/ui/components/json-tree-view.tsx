@@ -12,7 +12,6 @@ import { SearchBar } from "@/ui/components/search-bar";
 import { JsonTreeNode } from "@/ui/components/json-tree-node";
 import type { JsonNode } from "@/core/domain/entities/json-node";
 import { searchInTree } from "@/core/domain/services/search-service";
-import { Empty, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { useUseCase } from "@/ui/providers/use-case-provider";
 import { Minimize2, Maximize2 } from "lucide-react";
 
@@ -69,26 +68,6 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
 
   const disabled = !tree;
 
-  if (!tree) {
-    return (
-      <Card className="flex flex-1 flex-col gap-0 rounded-none border-0 min-w-0 [--card-spacing:0px]">
-        <CardHeader className="flex shrink-0 flex-row items-center border-b px-3">
-          <CardTitle className="text-xs font-medium text-muted-foreground m-0">
-            Visor
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex min-h-0 flex-1 items-center justify-center p-0">
-          <Empty>
-            <EmptyTitle>Sin datos JSON</EmptyTitle>
-            <EmptyDescription>
-              Pega o escribe JSON en el editor para previsualizarlo aquí.
-            </EmptyDescription>
-          </Empty>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <Card className="flex flex-1 flex-col gap-0 rounded-none border-0 min-w-0 [--card-spacing:0px]">
       <CardHeader className="flex shrink-0 flex-row items-center gap-2 border-b px-3">
@@ -122,20 +101,22 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
             )
           }
         />
-        <div className="flex-1 overflow-auto">
-          <div className="py-2">
-            <JsonTreeNode
-              node={tree}
-              depth={0}
-              path={tree.key ?? "(root)"}
-              searchTerm={searchTerm}
-              expandedPaths={expandedPaths}
-              allExpanded={allExpanded}
-              onToggle={toggleNode}
-              onCopy={(value: string) => useCase.copyValue(value)}
-            />
+        {tree ? (
+          <div className="flex-1 overflow-auto">
+            <div className="py-2">
+              <JsonTreeNode
+                node={tree}
+                depth={0}
+                path={tree.key ?? "(root)"}
+                searchTerm={searchTerm}
+                expandedPaths={expandedPaths}
+                allExpanded={allExpanded}
+                onToggle={toggleNode}
+                onCopy={(value: string) => useCase.copyValue(value)}
+              />
+            </div>
           </div>
-        </div>
+        ) : null}
       </CardContent>
     </Card>
   );
