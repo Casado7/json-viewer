@@ -151,14 +151,16 @@ export function JsonTreeNode({
                   </button>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-72 p-0 overflow-hidden" side="right" align="start">
-                  {imgLoading && <Skeleton className="aspect-[4/3] w-full rounded-none" />}
-                  <img
-                    src={node.value as string}
-                    alt="Preview"
-                    className={`w-full h-auto ${imgLoading ? "hidden" : "block"}`}
-                    onLoad={() => setImgLoading(false)}
-                    onError={() => setImgLoading(false)}
-                  />
+                  <div className="aspect-video relative">
+                    {imgLoading && <Skeleton className="absolute inset-0 rounded-none" />}
+                    <img
+                      src={node.value as string}
+                      alt="Preview"
+                      className={`absolute inset-0 w-full h-full object-contain ${imgLoading ? "hidden" : "block"}`}
+                      onLoad={() => setImgLoading(false)}
+                      onError={() => setImgLoading(false)}
+                    />
+                  </div>
                 </HoverCardContent>
               </HoverCard>
             ) : (
