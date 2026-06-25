@@ -96,11 +96,11 @@ export const JsonTreeView = forwardRef<TreeViewHandle, JsonTreeViewProps>(
           Visor
         </CardTitle>
         <div data-slot="button-group" className="flex">
-          <Button variant="outline" size="xs" onClick={collapseAllTree} aria-disabled={disabled || undefined} data-disabled={disabled || undefined} className={"border-primary/40" + (disabled ? " pointer-events-none opacity-50" : "")}>
+          <Button variant="ghost" size="xs" onClick={collapseAllTree} aria-disabled={disabled || undefined} data-disabled={disabled || undefined} className={disabled ? "pointer-events-none opacity-50" : ""}>
             <Minimize2 data-icon="inline-start" />
             Colapsar
           </Button>
-          <Button variant="outline" size="xs" onClick={expandAllTree} aria-disabled={disabled || undefined} data-disabled={disabled || undefined} className={"border-primary/40" + (disabled ? " pointer-events-none opacity-50" : "")}>
+          <Button variant="ghost" size="xs" onClick={expandAllTree} aria-disabled={disabled || undefined} data-disabled={disabled || undefined} className={disabled ? "pointer-events-none opacity-50" : ""}>
             <Maximize2 data-icon="inline-start" />
             Expandir
           </Button>

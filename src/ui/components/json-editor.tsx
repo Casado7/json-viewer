@@ -40,7 +40,7 @@ export function JsonEditor({
           Editor
         </CardTitle>
         <div data-slot="button-group" className="flex">
-          <Button variant="default" size="xs" onClick={onFormat}>
+          <Button variant="ghost" size="xs" onClick={onFormat}>
             <FileJson data-icon="inline-start" />
             Formatear
           </Button>
