@@ -1,7 +1,14 @@
 "use client";
 
-import { ChevronRight, ChevronDown, Copy, ExternalLink } from "lucide-react";
+import { ChevronRight, ChevronDown, Copy, ExternalLink, Route, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import type { JsonNode } from "@/core/domain/entities/json-node";
 import { stringifyChildren } from "@/core/domain/services/json-service";
 import { hasSearchMatch } from "@/core/domain/services/search-service";
@@ -76,6 +83,22 @@ function isUrl(value: unknown): value is string {
   return typeof value === "string" && (value.startsWith("http://") || value.startsWith("https://"));
 }
 
+function handleOpenUrl(value: unknown) {
+  if (isUrl(value)) {
+    window.open(value, "_blank", "noopener,noreferrer");
+    toast.success("Enlace abierto");
+  }
+}
+
+async function copyToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast.success("Copiado al portapapeles");
+  } catch {
+    toast.error("Error al copiar");
+  }
+}
+
 export function JsonTreeNode({
   node,
   depth,
@@ -96,57 +119,80 @@ export function JsonTreeNode({
   if (isLeaf) {
     const fmt = formatValue(node);
     return (
-      <div
-        className="group flex items-start gap-1.5 rounded px-1 py-0.5 hover:bg-muted/50"
-        style={{ paddingLeft: `${12 + indent}px` }}
-      >
-        {node.key !== null && (
-          <span className="font-mono text-xs font-medium text-foreground shrink-0">
-            {highlightText(node.key, searchTerm)}
-            <span className="text-muted-foreground">: </span>
-          </span>
-        )}
-        <button
-          className={`font-mono text-xs ${fmt.color} text-left cursor-pointer hover:underline`}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (isUrl(node.value)) {
-              window.open(node.value as string, "_blank", "noopener,noreferrer");
-              toast.success("Enlace abierto");
-            } else {
-              onCopy(node.value as string);
-            }
-          }}
-        >
-          {highlightText(fmt.display, searchTerm)}
-        </button>
-        <TypeBadge type={node.type} />
-        {isUrl(node.value) && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-4 opacity-0 group-hover:opacity-100 shrink-0"
-            onClick={(e) => {
-              e.stopPropagation();
-              window.open(node.value as string, "_blank", "noopener,noreferrer");
-              toast.success("Enlace abierto");
-            }}
+      <ContextMenu>
+        <ContextMenuTrigger asChild>
+          <div
+            className="group flex items-start gap-1.5 rounded px-1 py-0.5 hover:bg-muted/50"
+            style={{ paddingLeft: `${12 + indent}px` }}
           >
-            <ExternalLink className="size-2.5 text-primary" />
-          </Button>
-        )}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-4 opacity-0 group-hover:opacity-100 shrink-0"
-          onClick={(e) => {
-            e.stopPropagation();
-            onCopy(node.value as string);
-          }}
-        >
-          <Copy className="size-2.5" />
-        </Button>
-      </div>
+            {node.key !== null && (
+              <span className="font-mono text-xs font-medium text-foreground shrink-0">
+                {highlightText(node.key, searchTerm)}
+                <span className="text-muted-foreground">: </span>
+              </span>
+            )}
+            <button
+              className={`font-mono text-xs ${fmt.color} text-left cursor-pointer hover:underline`}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isUrl(node.value)) {
+                  handleOpenUrl(node.value);
+                } else {
+                  onCopy(node.value as string);
+                }
+              }}
+            >
+              {highlightText(fmt.display, searchTerm)}
+            </button>
+            <TypeBadge type={node.type} />
+            {isUrl(node.value) && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-4 opacity-0 group-hover:opacity-100 shrink-0"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenUrl(node.value);
+                }}
+              >
+                <ExternalLink className="size-2.5 text-primary" />
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-4 opacity-0 group-hover:opacity-100 shrink-0"
+              onClick={(e) => {
+                e.stopPropagation();
+                onCopy(node.value as string);
+              }}
+            >
+              <Copy className="size-2.5" />
+            </Button>
+          </div>
+        </ContextMenuTrigger>
+        <ContextMenuContent className="w-48">
+          <ContextMenuItem onClick={() => onCopy(node.value as string)}>
+            <Copy className="size-4" />
+            <span className="ml-2">Copiar valor</span>
+          </ContextMenuItem>
+          {isUrl(node.value) && (
+            <ContextMenuItem onClick={() => handleOpenUrl(node.value)}>
+              <ExternalLink className="size-4" />
+              <span className="ml-2">Abrir enlace</span>
+            </ContextMenuItem>
+          )}
+          <ContextMenuSeparator />
+          <ContextMenuItem onClick={() => copyToClipboard(path)}>
+            <Route className="size-4" />
+            <span className="ml-2">Copiar ruta</span>
+          </ContextMenuItem>
+          <ContextMenuItem onClick={() => copyToClipboard(JSON.stringify(node.value))}>
+            <Code className="size-4" />
+            <span className="ml-2">Copiar como JSON</span>
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
     );
   }
 
@@ -157,41 +203,56 @@ export function JsonTreeNode({
 
   return (
     <div>
-      <div
-        className="group flex cursor-pointer items-center gap-1 rounded px-1 py-0.5 hover:bg-muted/50"
-        style={{ paddingLeft: `${8 + indent}px` }}
-        onClick={() => onToggle(path)}
-      >
-        {isExpandable ? (
-          shouldExpand ? (
-            <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
-          ) : (
-            <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
-          )
-        ) : (
-          <span className="size-3 shrink-0" />
-        )}
-        {node.key !== null && (
-          <span className="font-mono text-xs font-medium text-foreground shrink-0">
-            {highlightText(node.key, searchTerm)}
-            <span className="text-muted-foreground">: </span>
-          </span>
-        )}
-        <span className="font-mono text-xs text-muted-foreground">
-          {preview}
-        </span>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-4 opacity-0 group-hover:opacity-100 shrink-0"
-          onClick={(e) => {
-            e.stopPropagation();
-            onCopy(stringifyChildren(node));
-          }}
-        >
-          <Copy className="size-2.5" />
-        </Button>
-      </div>
+      <ContextMenu>
+        <ContextMenuTrigger asChild>
+          <div
+            className="group flex cursor-pointer items-center gap-1 rounded px-1 py-0.5 hover:bg-muted/50"
+            style={{ paddingLeft: `${8 + indent}px` }}
+            onClick={() => onToggle(path)}
+          >
+            {isExpandable ? (
+              shouldExpand ? (
+                <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
+              ) : (
+                <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
+              )
+            ) : (
+              <span className="size-3 shrink-0" />
+            )}
+            {node.key !== null && (
+              <span className="font-mono text-xs font-medium text-foreground shrink-0">
+                {highlightText(node.key, searchTerm)}
+                <span className="text-muted-foreground">: </span>
+              </span>
+            )}
+            <span className="font-mono text-xs text-muted-foreground">
+              {preview}
+            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-4 opacity-0 group-hover:opacity-100 shrink-0"
+              onClick={(e) => {
+                e.stopPropagation();
+                onCopy(stringifyChildren(node));
+              }}
+            >
+              <Copy className="size-2.5" />
+            </Button>
+          </div>
+        </ContextMenuTrigger>
+        <ContextMenuContent className="w-48">
+          <ContextMenuItem onClick={() => onCopy(stringifyChildren(node))}>
+            <Code className="size-4" />
+            <span className="ml-2">Copiar como JSON</span>
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem onClick={() => copyToClipboard(path)}>
+            <Route className="size-4" />
+            <span className="ml-2">Copiar ruta</span>
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
       {shouldExpand && node.children && (
         <div>
           {node.children.map((child, index) => {
