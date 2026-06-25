@@ -150,8 +150,8 @@ export function JsonTreeNode({
                     {highlightText(fmt.display, searchTerm)}
                   </button>
                 </HoverCardTrigger>
-                <HoverCardContent className="w-72 p-0 overflow-hidden" side="right" align="start">
-                  <div className="aspect-video relative">
+                <HoverCardContent className="w-[500px] p-0 overflow-hidden" side="right" align="start">
+                  <div className="aspect-[4/3] relative">
                     {imgLoading && <Skeleton className="absolute inset-0 rounded-none" />}
                     <img
                       src={node.value as string}
