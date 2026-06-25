@@ -129,6 +129,7 @@ export function JsonTreeNode({
             onClick={(e) => {
               e.stopPropagation();
               window.open(node.value as string, "_blank", "noopener,noreferrer");
+              toast.success("Enlace abierto");
             }}
           >
             <ExternalLink className="size-2.5 text-primary" />
