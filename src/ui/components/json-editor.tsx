@@ -8,7 +8,7 @@ import {
   CardTitle,
   CardContent,
 } from "@/components/ui/card";
-import { FileJson, Copy, Trash2, Shrink, Download, AlertCircle } from "lucide-react";
+import { FileJson, Copy, Trash2, Shrink, Download, AlertCircle, Undo2, Redo2 } from "lucide-react";
 
 interface JsonEditorProps {
   value: string;
@@ -19,6 +19,10 @@ interface JsonEditorProps {
   onCopy: () => void;
   onExport: () => void;
   onClear: () => void;
+  onUndo: () => void;
+  onRedo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
   disabled: boolean;
 }
 
@@ -31,6 +35,10 @@ export function JsonEditor({
   onCopy,
   onExport,
   onClear,
+  onUndo,
+  onRedo,
+  canUndo,
+  canRedo,
   disabled,
 }: JsonEditorProps) {
   return (
@@ -40,6 +48,12 @@ export function JsonEditor({
           Editor
         </CardTitle>
         <div data-slot="button-group" className="flex">
+          <Button variant="ghost" size="xs" onClick={onUndo} aria-disabled={!canUndo || undefined} data-disabled={!canUndo || undefined} className={!canUndo ? "pointer-events-none opacity-30" : ""}>
+            <Undo2 data-icon="inline-start" />
+          </Button>
+          <Button variant="ghost" size="xs" onClick={onRedo} aria-disabled={!canRedo || undefined} data-disabled={!canRedo || undefined} className={!canRedo ? "pointer-events-none opacity-30" : ""}>
+            <Redo2 data-icon="inline-start" />
+          </Button>
           <Button variant="ghost" size="xs" onClick={onFormat}>
             <FileJson data-icon="inline-start" />
             Formatear

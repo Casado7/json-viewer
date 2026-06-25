@@ -12,6 +12,7 @@ import { JsonEditor } from "@/ui/components/json-editor";
 import { JsonTreeView } from "@/ui/components/json-tree-view";
 import { StatusBar } from "@/ui/components/status-bar";
 import { useUseCase } from "@/ui/providers/use-case-provider";
+import { Undo2, Redo2 } from "lucide-react";
 
 export default function Home() {
   const useCase = useUseCase();
@@ -24,6 +25,8 @@ export default function Home() {
     searchTerm: "",
   });
   const [isParsing, setIsParsing] = useState(false);
+  const [undoStack, setUndoStack] = useState<string[]>([]);
+  const [redoStack, setRedoStack] = useState<string[]>([]);
 
   useEffect(() => {
     const initial = useCase.loadInitialState();
@@ -33,8 +36,21 @@ export default function Home() {
     }
   }, [useCase]);
 
+  const typingTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined as any);
+
+  const pushUndo = useCallback(() => {
+    setUndoStack((prev) => [textRef.current, ...prev].slice(0, 50));
+    setRedoStack([]);
+  }, []);
+
   const handleChange = useCallback(
     (value: string) => {
+      if (!typingTimerRef.current) pushUndo();
+      clearTimeout(typingTimerRef.current);
+      typingTimerRef.current = setTimeout(() => {
+        typingTimerRef.current = undefined as any;
+      }, 2000);
+
       textRef.current = value;
       setState((prev) => ({ ...prev, text: value }));
       setIsParsing(true);
@@ -43,10 +59,11 @@ export default function Home() {
         setIsParsing(false);
       });
     },
-    [useCase]
+    [useCase, pushUndo]
   );
 
   const handleFormat = useCallback(() => {
+    pushUndo();
     const formatted = useCase.format(textRef.current);
     if (formatted !== null) {
       textRef.current = formatted;
@@ -55,9 +72,10 @@ export default function Home() {
         setState((prev) => ({ ...prev, ...partial }));
       });
     }
-  }, [useCase]);
+  }, [useCase, pushUndo]);
 
   const handleMinify = useCallback(() => {
+    pushUndo();
     const minified = useCase.minify(textRef.current);
     if (minified !== null) {
       textRef.current = minified;
@@ -77,6 +95,7 @@ export default function Home() {
   }, [useCase]);
 
   const handleClear = useCallback(() => {
+    pushUndo();
     textRef.current = "";
     setState({ text: "", tree: null, error: null, searchTerm: "" });
     useCase.notifyClear();
@@ -85,8 +104,52 @@ export default function Home() {
   const hasJson = !!state.tree;
   const disabled = !hasJson || isParsing;
 
+  const canUndo = undoStack.length > 0;
+  const canRedo = redoStack.length > 0;
+
+  const handleUndo = useCallback(() => {
+    if (undoStack.length === 0) return;
+    setRedoStack((prev) => [textRef.current, ...prev]);
+    const prevText = undoStack[0];
+    setUndoStack((prevStack) => prevStack.slice(1));
+    textRef.current = prevText;
+    setState((s) => ({ ...s, text: prevText }));
+    useCase.processInput(prevText, (partial) => {
+      setState((s) => ({ ...s, ...partial }));
+    });
+  }, [undoStack, useCase]);
+
+  const handleRedo = useCallback(() => {
+    if (redoStack.length === 0) return;
+    setUndoStack((prev) => [textRef.current, ...prev]);
+    const nextText = redoStack[0];
+    setRedoStack((prevStack) => prevStack.slice(1));
+    textRef.current = nextText;
+    setState((s) => ({ ...s, text: nextText }));
+    useCase.processInput(nextText, (partial) => {
+      setState((s) => ({ ...s, ...partial }));
+    });
+  }, [redoStack, useCase]);
+
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
+        if (e.shiftKey) {
+          e.preventDefault();
+          handleRedo();
+        } else {
+          e.preventDefault();
+          handleUndo();
+        }
+      }
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [handleUndo, handleRedo]);
+
   const handleLoadHistory = useCallback(
     (text: string) => {
+      pushUndo();
       textRef.current = text;
       setState((prev) => ({ ...prev, text }));
       useCase.processInput(text, (partial) => {
@@ -111,6 +174,10 @@ export default function Home() {
               onCopy={handleCopy}
               onExport={handleExport}
               onClear={handleClear}
+              onUndo={handleUndo}
+              onRedo={handleRedo}
+              canUndo={canUndo}
+              canRedo={canRedo}
               disabled={disabled}
             />
           </ResizablePanel>
