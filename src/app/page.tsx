@@ -178,25 +178,27 @@ export default function Home() {
         </div>
         <div className="flex flex-1 min-h-0">
           <div className="flex flex-[2] flex-col border-r">
-            <div className="flex shrink-0 items-center gap-2 border-b px-3 pt-2 pb-3">
+            <div className="flex shrink-0 items-center gap-2 border-b px-3 pt-1.5 pb-3">
               <div className="h-3.5 w-10 animate-pulse rounded bg-muted-foreground/20" />
-              <div className="flex gap-0.5">
-                <div className="h-6 w-16 animate-pulse rounded bg-muted-foreground/20" />
-                <div className="h-6 w-16 animate-pulse rounded bg-muted-foreground/20" />
-                <div className="h-6 w-14 animate-pulse rounded bg-muted-foreground/20" />
-                <div className="h-6 w-16 animate-pulse rounded bg-muted-foreground/20" />
-                <div className="h-6 w-14 animate-pulse rounded bg-muted-foreground/20" />
+              <div className="flex">
+                <div className="h-6 w-7 animate-pulse rounded bg-muted-foreground/20" />
+                <div className="h-6 w-7 animate-pulse rounded bg-muted-foreground/20" />
+                <div className="h-6 w-[62px] animate-pulse rounded bg-muted-foreground/20" />
+                <div className="h-6 w-[58px] animate-pulse rounded bg-muted-foreground/20" />
+                <div className="h-6 w-[46px] animate-pulse rounded bg-muted-foreground/20" />
+                <div className="h-6 w-[54px] animate-pulse rounded bg-muted-foreground/20" />
+                <div className="h-6 w-[50px] animate-pulse rounded bg-muted-foreground/20" />
               </div>
             </div>
             <Skeleton className="flex-1 w-full rounded-none" />
           </div>
           <div className="flex w-1 shrink-0 bg-border" />
           <div className="flex flex-[3] flex-col">
-            <div className="flex shrink-0 items-center gap-2 border-b px-3 pt-2 pb-3">
+            <div className="flex shrink-0 items-center gap-2 border-b px-3 pt-1.5 pb-3">
               <div className="h-3.5 w-10 animate-pulse rounded bg-muted-foreground/20" />
-              <div className="flex gap-0.5">
-                <div className="h-6 w-16 animate-pulse rounded bg-muted-foreground/20" />
-                <div className="h-6 w-16 animate-pulse rounded bg-muted-foreground/20" />
+              <div className="flex">
+                <div className="h-6 w-[58px] animate-pulse rounded bg-muted-foreground/20" />
+                <div className="h-6 w-[54px] animate-pulse rounded bg-muted-foreground/20" />
               </div>
             </div>
             <Skeleton className="flex-1 w-full rounded-none" />
