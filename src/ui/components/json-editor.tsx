@@ -35,7 +35,7 @@ export function JsonEditor({
 }: JsonEditorProps) {
   return (
     <Card className="flex flex-1 flex-col gap-0 rounded-none border-0 border-r min-w-0 [--card-spacing:0px]">
-      <CardHeader className="flex shrink-0 flex-row items-center gap-2 border-b px-3 py-2">
+      <CardHeader className="flex shrink-0 flex-row items-center gap-2 border-b px-3">
         <CardTitle className="text-xs font-medium text-muted-foreground m-0">
           Editor
         </CardTitle>
